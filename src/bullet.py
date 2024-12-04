@@ -4,11 +4,11 @@ class Bullet:
     def __init__(self, x, y, direction, damage, sensor):
         self.pos = Vector2(x, y)
         self.dir = direction
-        self.speed = 600
+        self.speed = 900
         self.damage = damage
         self.sensor = sensor
         self.alive = True
-        self.bullet_ready = False
+        self.type = "Bullet"
 
     def move(self, dt):
         self.pos += self.speed * dt * self.dir

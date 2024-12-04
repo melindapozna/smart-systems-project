@@ -12,13 +12,14 @@ class BasicNPC:
         self.alive = True
         self.damage = 20
         self.bullet_ready = False
-        self.clock = time.clock()
+        self.prev_shot_time = time.time()
+        self.type = "Basic"
 
     def move(self, dt):
         self.look_at(self.sensor.get_reading())
         self.pos += self.speed * dt * self.dir
 
-        if self.pos.x % 10 == 0:
+        if not self.bullet_ready and time.time() - self.prev_shot_time > 1:
             self.bullet_ready = True
 
     def look_at(self, position):
@@ -38,5 +39,6 @@ class BasicNPC:
                 return None
 
         self.bullet_ready = False
+        self.prev_shot_time = time.time()
         return Bullet(self.pos.x, self.pos.y, self.dir, self.damage, DummySensor())
 

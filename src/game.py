@@ -36,10 +36,14 @@ while running:
     pygame.draw.circle(screen, "green", player.pos, 40)
 
     for npc in npcs:
-        pygame.draw.circle(screen, "red", npc.pos, 40)
+        if npc.type == "Basic":
+            pygame.draw.circle(screen, "red", npc.pos, 40)
+            if npc.bullet_ready:
+                npcs.append(npc.shoot_bullet())
+        if npc.type == "Bullet":
+            pygame.draw.circle(screen, "yellow", npc.pos, 5)
         npc.move(dt)
-        if npc.bullet_ready:
-            npcs.append(npc.shoot_bullet())
+
 
     keys = pygame.key.get_pressed()
     player_direction = pygame.Vector2(0, 0)
