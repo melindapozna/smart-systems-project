@@ -1,13 +1,21 @@
 import pygame
+from time import sleep
 
 from src.player import Player
 from src.npc_basic import BasicNPC
 
 
-class PlayerSensor:
-    @staticmethod
-    def get_reading():
+class PlayerPositionSensor:
+    def get_reading(self):
         return player.pos
+
+class PlayerCollisionSensor:
+    def get_reading(self, position):
+        if position.distance_to(player.pos) < 35:
+            return player
+        # for npc in npcs:
+            # if position.distance_to(npc.pos) < 35:
+                # return npc
 
 # pygame setup
 pygame.init()
@@ -16,12 +24,11 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-sensor = PlayerSensor()
 player = Player(screen.get_width() / 2, screen.get_height() / 2)
 
 npcs = []
-npcs.append(BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, sensor))
-npcs.append(BasicNPC(3 * screen.get_width() / 4, 3 * screen.get_height() / 4, 220, sensor))
+npcs.append(BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, PlayerPositionSensor()))
+npcs.append(BasicNPC(3 * screen.get_width() / 4, 3 * screen.get_height() / 4, 220, PlayerPositionSensor()))
 
 while running:
     # poll for events
@@ -33,17 +40,25 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    pygame.draw.circle(screen, "green", player.pos, 40)
+    pygame.draw.circle(screen, "green", player.pos, 30)
 
     for npc in npcs:
         if npc.type == "Basic":
-            pygame.draw.circle(screen, "red", npc.pos, 40)
+            pygame.draw.circle(screen, "red", npc.pos, 30)
             if npc.bullet_ready:
-                npcs.append(npc.shoot_bullet())
+                npcs.append(npc.shoot_bullet(PlayerCollisionSensor()))
         if npc.type == "Bullet":
             pygame.draw.circle(screen, "yellow", npc.pos, 5)
         npc.move(dt)
 
+    if not player.alive:
+        screen.fill("red")
+        text = pygame.font.Font("freesansbold.ttf", 32).render("Game Over", True, "black")
+        screen.blit(text, (screen.get_width() / 2 - text.get_width() / 2, screen.get_height() / 2))
+        pygame.display.flip()
+        sleep(3)
+        running = False
+    npcs = list(filter(lambda x: x.alive, npcs))
 
     keys = pygame.key.get_pressed()
     player_direction = pygame.Vector2(0, 0)

@@ -12,7 +12,7 @@ class Bullet:
 
     def move(self, dt):
         self.pos += self.speed * dt * self.dir
-        target_hit = self.sensor.get_reading()
+        target_hit = self.sensor.get_reading(self.pos)
         if target_hit:
             target_hit.take_damage(self.damage)
             self.alive = False

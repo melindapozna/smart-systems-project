@@ -33,12 +33,8 @@ class BasicNPC:
         if self.hp <= 0:
             self.alive = False
 
-    def shoot_bullet(self):
-        class DummySensor:
-            def get_reading(self):
-                return None
-
+    def shoot_bullet(self, collisionSensor):
         self.bullet_ready = False
         self.prev_shot_time = time.time()
-        return Bullet(self.pos.x, self.pos.y, self.dir, self.damage, DummySensor())
+        return Bullet(self.pos.x, self.pos.y, self.dir, self.damage, collisionSensor)
 
