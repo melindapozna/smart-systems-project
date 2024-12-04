@@ -2,6 +2,12 @@ import pygame
 
 from src.npc_basic import BasicNPC
 
+
+class PlayerSensor:
+    @staticmethod
+    def get_reading():
+        return player_pos
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -9,8 +15,10 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+sensor = PlayerSensor()
+
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-npc = BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220)
+npc = BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, sensor)
 
 while running:
     # poll for events
@@ -24,7 +32,7 @@ while running:
 
     pygame.draw.circle(screen, "green", player_pos, 40)
     pygame.draw.circle(screen, "red", npc.pos, 40)
-    npc.look_at(player_pos)
+
     npc.move(dt)
 
     keys = pygame.key.get_pressed()
