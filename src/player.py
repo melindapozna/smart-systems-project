@@ -8,6 +8,10 @@ class Player:
         self.pos = pygame.Vector2(x, y)
         self.hp = 100
         self.alive = True
+        self.speed = 400
+
+    def move(self, direction, dt):
+        self.pos += self.speed * dt * direction
 
     def take_damage(self, damage):
         self.hp -= damage

@@ -37,14 +37,18 @@ while running:
     npc.move(dt)
 
     keys = pygame.key.get_pressed()
+    player_direction = pygame.Vector2(0, 0)
     if keys[pygame.K_w]:
-        player.pos.y -= 300 * dt
+        player_direction += pygame.Vector2(0, -1)
     if keys[pygame.K_s]:
-        player.pos.y += 300 * dt
+        player_direction += pygame.Vector2(0, 1)
     if keys[pygame.K_a]:
-        player.pos.x -= 300 * dt
+        player_direction += pygame.Vector2(-1, 0)
     if keys[pygame.K_d]:
-        player.pos.x += 300 * dt
+        player_direction += pygame.Vector2(1, 0)
+    if player_direction.length() > 1:
+        player_direction /= player_direction.length()
+    player.move(player_direction, dt)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
