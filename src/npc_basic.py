@@ -44,3 +44,5 @@ class BasicNPC:
         self.prev_shot_time = time.time()
         return Bullet(self.pos.x, self.pos.y, self.dir, self.damage, collision_sensor)
 
+    def accept(self, visitor):
+        visitor.visit_basic_npc(self)

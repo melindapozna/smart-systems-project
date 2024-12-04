@@ -23,6 +23,47 @@ class PlayerCollisionSensor:
             # if position.distance_to(npc.pos) < 35:
                 # return npc
 
+
+class DrawVisitor:
+    def visit_player(self, player):
+        pygame.draw.circle(screen, "green", player.pos, 30)
+
+    def visit_basic_npc(self, basic_npc):
+        pygame.draw.circle(screen, "red", npc.pos, 30)
+        # TODO move out of here
+        if npc.bullet_ready:
+            npcs.append(npc.shoot_bullet(PlayerCollisionSensor()))
+
+    def visit_bullet(self, bullet):
+        pygame.draw.circle(screen, "yellow", npc.pos, 5)
+
+
+class MovementVisitor:
+    def visit_player(self, player):
+        keys = pygame.key.get_pressed()
+        player_direction = pygame.Vector2(0, 0)
+        if keys[pygame.K_w]:
+            player_direction += pygame.Vector2(0, -1)
+        if keys[pygame.K_s]:
+            player_direction += pygame.Vector2(0, 1)
+        if keys[pygame.K_a]:
+            player_direction += pygame.Vector2(-1, 0)
+        if keys[pygame.K_d]:
+            player_direction += pygame.Vector2(1, 0)
+        if player_direction.length() > 1:
+            player_direction /= player_direction.length()
+        player.move(player_direction, dt)
+
+    def visit_basic_npc(self, basic_npc):
+        basic_npc.move(dt)
+        # TODO maybe move it elsewhere?
+        if npc.bullet_ready:
+            npcs.append(npc.shoot_bullet(PlayerCollisionSensor()))
+
+    def visit_bullet(self, bullet):
+        bullet.move(dt)
+
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -39,6 +80,9 @@ npcs.append(BasicNPC(screen.get_width() / 4,
                      PlayerPositionSensor(),
                      BorderCollisionSensor()))
 
+draw_visitor = DrawVisitor()
+movement_visitor = MovementVisitor()
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -49,16 +93,12 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    pygame.draw.circle(screen, "green", player.pos, 30)
+    player.accept(draw_visitor)
+    player.accept(movement_visitor)
 
     for npc in npcs:
-        if npc.type == "Basic":
-            pygame.draw.circle(screen, "red", npc.pos, 30)
-            if npc.bullet_ready:
-                npcs.append(npc.shoot_bullet(PlayerCollisionSensor()))
-        if npc.type == "Bullet":
-            pygame.draw.circle(screen, "yellow", npc.pos, 5)
-        npc.move(dt)
+        npc.accept(draw_visitor)
+        npc.accept(movement_visitor)
 
     if not player.alive:
         screen.fill("red")
@@ -67,21 +107,10 @@ while running:
         pygame.display.flip()
         sleep(1)
         running = False
+
     npcs = list(filter(lambda x: x.alive, npcs))
 
-    keys = pygame.key.get_pressed()
-    player_direction = pygame.Vector2(0, 0)
-    if keys[pygame.K_w]:
-        player_direction += pygame.Vector2(0, -1)
-    if keys[pygame.K_s]:
-        player_direction += pygame.Vector2(0, 1)
-    if keys[pygame.K_a]:
-        player_direction += pygame.Vector2(-1, 0)
-    if keys[pygame.K_d]:
-        player_direction += pygame.Vector2(1, 0)
-    if player_direction.length() > 1:
-        player_direction /= player_direction.length()
-    player.move(player_direction, dt)
+
 
     # flip() the display to put your work on screen
     pygame.display.flip()

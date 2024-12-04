@@ -20,3 +20,6 @@ class Player:
         self.hp -= damage
         if self.hp <= 0:
             self.alive = False
+
+    def accept(self, visitor):
+        visitor.visit_player(self)

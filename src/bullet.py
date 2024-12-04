@@ -22,3 +22,6 @@ class Bullet:
 
         if time.time() - self.creation_time > 10:
             self.alive = False
+
+    def accept(self, visitor):
+        visitor.visit_bullet(self)
