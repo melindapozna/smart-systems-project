@@ -7,6 +7,8 @@ class BasicNPC:
         self.speed = speed
         self.dir = Vector2(0, 1)
         self.sensor = sensor
+        self.hp = 50
+        self.alive = True
 
     def move(self, dt):
         self.look_at(self.sensor.get_reading())
@@ -18,5 +20,9 @@ class BasicNPC:
             return
         self.dir = (position - self.pos) / dist
 
+    def take_damage(self, damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            self.alive = False
 
 
