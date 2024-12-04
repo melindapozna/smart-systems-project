@@ -9,7 +9,7 @@ class BasicNPC:
         self.sensor = sensor
 
     def move(self, dt):
-        self.dir = self.sensor.get_reading()
+        self.look_at(self.sensor.get_reading())
         self.pos += self.speed * dt * self.dir
 
     def look_at(self, position):
