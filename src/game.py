@@ -5,6 +5,12 @@ from src.player import Player
 from src.npc_basic import BasicNPC
 
 
+class BorderCollisionSensor:
+    def get_reading(self, position):
+        return not ((0 < position.x < screen.get_width()) and
+                (0 < position.y < screen.get_height()))
+
+
 class PlayerPositionSensor:
     def get_reading(self):
         return player.pos
@@ -24,11 +30,14 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player = Player(screen.get_width() / 2, screen.get_height() / 2)
+player = Player(screen.get_width() / 2, screen.get_height() / 2, BorderCollisionSensor())
 
 npcs = []
-npcs.append(BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, PlayerPositionSensor()))
-npcs.append(BasicNPC(3 * screen.get_width() / 4, 3 * screen.get_height() / 4, 220, PlayerPositionSensor()))
+npcs.append(BasicNPC(screen.get_width() / 4,
+                     screen.get_height() / 4,
+                     220,
+                     PlayerPositionSensor(),
+                     BorderCollisionSensor()))
 
 while running:
     # poll for events
@@ -56,7 +65,7 @@ while running:
         text = pygame.font.Font("freesansbold.ttf", 32).render("Game Over", True, "black")
         screen.blit(text, (screen.get_width() / 2 - text.get_width() / 2, screen.get_height() / 2))
         pygame.display.flip()
-        sleep(3)
+        sleep(1)
         running = False
     npcs = list(filter(lambda x: x.alive, npcs))
 

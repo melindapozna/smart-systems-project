@@ -1,4 +1,6 @@
 from pygame import Vector2
+import time
+
 
 class Bullet:
     def __init__(self, x, y, direction, damage, sensor):
@@ -8,6 +10,7 @@ class Bullet:
         self.damage = damage
         self.sensor = sensor
         self.alive = True
+        self.creation_time = time.time()
         self.type = "Bullet"
 
     def move(self, dt):
@@ -17,5 +20,5 @@ class Bullet:
             target_hit.take_damage(self.damage)
             self.alive = False
 
-
-
+        if time.time() - self.creation_time > 10:
+            self.alive = False
