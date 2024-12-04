@@ -19,9 +19,9 @@ class PlayerCollisionSensor:
     def get_reading(self, position):
         if position.distance_to(player.pos) < 35:
             return player
-        # for npc in npcs:
-            # if position.distance_to(npc.pos) < 35:
-                # return npc
+        for npc in npcs:
+            if position.distance_to(npc.pos) < 35:
+                return npc
 
 
 class DrawVisitor:
@@ -32,10 +32,10 @@ class DrawVisitor:
         pygame.draw.circle(screen, "red", npc.pos, 30)
         # TODO move out of here
         if npc.bullet_ready:
-            npcs.append(npc.shoot_bullet(PlayerCollisionSensor()))
+            npcs.append(npc.shoot_bullet(40, PlayerCollisionSensor()))
 
     def visit_bullet(self, bullet):
-        pygame.draw.circle(screen, "yellow", npc.pos, 5)
+        pygame.draw.circle(screen, "yellow", bullet.pos, 5)
 
 
 class MovementVisitor:
@@ -58,7 +58,7 @@ class MovementVisitor:
         basic_npc.move(dt)
         # TODO maybe move it elsewhere?
         if npc.bullet_ready:
-            npcs.append(npc.shoot_bullet(PlayerCollisionSensor()))
+            bullets.append(npc.shoot_bullet(40, PlayerCollisionSensor()))
 
     def visit_bullet(self, bullet):
         bullet.move(dt)
@@ -80,6 +80,8 @@ npcs.append(BasicNPC(screen.get_width() / 4,
                      PlayerPositionSensor(),
                      BorderCollisionSensor()))
 
+bullets = []
+
 draw_visitor = DrawVisitor()
 movement_visitor = MovementVisitor()
 
@@ -100,6 +102,10 @@ while running:
         npc.accept(draw_visitor)
         npc.accept(movement_visitor)
 
+    for bullet in bullets:
+        bullet.accept(draw_visitor)
+        bullet.accept(movement_visitor)
+
     if not player.alive:
         screen.fill("red")
         text = pygame.font.Font("freesansbold.ttf", 32).render("Game Over", True, "black")
@@ -109,6 +115,7 @@ while running:
         running = False
 
     npcs = list(filter(lambda x: x.alive, npcs))
+    bullets = list(filter(lambda x: x.alive, bullets))
 
 
 

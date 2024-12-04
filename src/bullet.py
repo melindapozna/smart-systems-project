@@ -3,8 +3,8 @@ import time
 
 
 class Bullet:
-    def __init__(self, x, y, direction, damage, sensor):
-        self.pos = Vector2(x, y)
+    def __init__(self, pos, direction, damage, sensor):
+        self.pos = pos
         self.dir = direction
         self.speed = 900
         self.damage = damage
