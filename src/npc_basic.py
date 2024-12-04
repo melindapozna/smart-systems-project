@@ -14,7 +14,7 @@ class BasicNPC:
         dist = self.pos.distance_to(position)
         if dist == 0:
             return
-        self. dir = (position - self.pos) / dist
+        self.dir = (position - self.pos) / dist
 
 
 
