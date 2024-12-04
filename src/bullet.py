@@ -8,6 +8,7 @@ class Bullet:
         self.damage = damage
         self.sensor = sensor
         self.alive = True
+        self.bullet_ready = False
 
     def move(self, dt):
         self.pos += self.speed * dt * self.dir

@@ -19,7 +19,9 @@ dt = 0
 sensor = PlayerSensor()
 player = Player(screen.get_width() / 2, screen.get_height() / 2)
 
-npc = BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, sensor)
+npcs = []
+npcs.append(BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, sensor))
+npcs.append(BasicNPC(3 * screen.get_width() / 4, 3 * screen.get_height() / 4, 220, sensor))
 
 while running:
     # poll for events
@@ -32,9 +34,12 @@ while running:
     screen.fill("purple")
 
     pygame.draw.circle(screen, "green", player.pos, 40)
-    pygame.draw.circle(screen, "red", npc.pos, 40)
 
-    npc.move(dt)
+    for npc in npcs:
+        pygame.draw.circle(screen, "red", npc.pos, 40)
+        npc.move(dt)
+        if npc.bullet_ready:
+            npcs.append(npc.shoot_bullet())
 
     keys = pygame.key.get_pressed()
     player_direction = pygame.Vector2(0, 0)
