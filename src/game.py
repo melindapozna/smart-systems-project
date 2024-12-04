@@ -1,12 +1,13 @@
 import pygame
 
+from src.player import Player
 from src.npc_basic import BasicNPC
 
 
 class PlayerSensor:
     @staticmethod
     def get_reading():
-        return player_pos
+        return player.pos
 
 # pygame setup
 pygame.init()
@@ -16,8 +17,8 @@ running = True
 dt = 0
 
 sensor = PlayerSensor()
+player = Player(screen.get_width() / 2, screen.get_height() / 2)
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 npc = BasicNPC(screen.get_width() / 4, screen.get_height() / 4, 220, sensor)
 
 while running:
@@ -30,20 +31,20 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    pygame.draw.circle(screen, "green", player_pos, 40)
+    pygame.draw.circle(screen, "green", player.pos, 40)
     pygame.draw.circle(screen, "red", npc.pos, 40)
 
     npc.move(dt)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
+        player.pos.y -= 300 * dt
     if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
+        player.pos.y += 300 * dt
     if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
+        player.pos.x -= 300 * dt
     if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
+        player.pos.x += 300 * dt
 
     # flip() the display to put your work on screen
     pygame.display.flip()
