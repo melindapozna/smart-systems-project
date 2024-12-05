@@ -25,11 +25,11 @@ class BasicNPC:
         self.pos += self.speed * dt * self.dir
         colliding_object = self.character_collision_sensor.get_reading(self.pos)
 
-        # Shoot a bullet if a second has passed since the last one
+        # Shoot a bullet if the previous collision was at least 2 seconds ago
+        # and if the previous shot was at least 1 second ago
         if self.collided and time.time() - self.prev_collision_time > 2:
             self.collided = False
-
-        if not self.collided and not self.bullet_ready and time.time() - self.prev_shot_time > 1:
+        elif not self.collided and not self.bullet_ready and time.time() - self.prev_shot_time > 1:
             self.bullet_ready = True
 
         # Kill the NPC if it reaches the border
@@ -37,13 +37,13 @@ class BasicNPC:
             self.alive = False
 
         if colliding_object and colliding_object.id != self.id:
-            self.prev_collision_time = time.time()
             self.collide()
-
 
     # make the npc face a target position
     def look_at(self, position):
         dist = self.pos.distance_to(position)
+
+        # face away from object collided with
         if self.collided:
             self.dir = -1 * (position - self.pos) / dist
             return
@@ -64,10 +64,11 @@ class BasicNPC:
         return Bullet(self.pos + offset * self.dir, self.dir, self.damage, collision_sensor)
 
     def collide(self):
+        self.prev_collision_time = time.time()
         self.collided = True
-        self.look_at(self.player_sensor.get_reading().rotate(180))
+        self.look_at(self.player_sensor.get_reading())
         self.bullet_ready = False
-
+        self.take_damage(5)
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
