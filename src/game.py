@@ -19,17 +19,17 @@ class Game:
 
         self.player = Player(self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
+        self.bullets = []
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs)
 
+        # initialize an NPC
         self.npcs.append(BasicNPC(self.screen.get_width() / 4,
                                   self.screen.get_height() / 4,
                                   90,
                                   self.player_position_sensor,
                                   self.border_sensor))
-
-        self.bullets = []
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
@@ -45,6 +45,7 @@ class Game:
 
             # fill the screen with a color to wipe away anything from last frame
             self.screen.fill("purple")
+            
             self.movement_visitor.dt = self.dt
             self.player.accept(self.draw_visitor)
             self.player.accept(self.movement_visitor)
