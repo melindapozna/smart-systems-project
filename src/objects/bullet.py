@@ -6,7 +6,7 @@ class Bullet:
     def __init__(self, pos, direction, damage, sensor):
         self.pos = pos
         self.dir = direction
-        self.speed = 900
+        self.speed = 400
         self.damage = damage
         self.sensor = sensor
         self.alive = True
@@ -23,4 +23,4 @@ class Bullet:
             self.alive = False
 
     def accept(self, visitor):
-        visitor.visit_bullet(self)
+        return visitor.visit_bullet(self)

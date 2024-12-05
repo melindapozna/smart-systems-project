@@ -8,7 +8,7 @@ class Player:
         self.pos = pygame.Vector2(x, y)
         self.hp = 100
         self.alive = True
-        self.speed = 400
+        self.speed = 150
         self.border_sensor = border_sensor
 
     def move(self, direction, dt):
@@ -22,4 +22,4 @@ class Player:
             self.alive = False
 
     def accept(self, visitor):
-        visitor.visit_player(self)
+        return visitor.visit_player(self)

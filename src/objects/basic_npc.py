@@ -1,5 +1,5 @@
 from pygame import Vector2
-from src.bullet import Bullet
+from src.objects.bullet import Bullet
 import time
 
 class BasicNPC:
@@ -45,4 +45,4 @@ class BasicNPC:
         return Bullet(self.pos + offset * self.dir, self.dir, self.damage, collision_sensor)
 
     def accept(self, visitor):
-        visitor.visit_basic_npc(self)
+        return visitor.visit_basic_npc(self)
