@@ -3,15 +3,14 @@ import time
 
 
 class Bullet:
-    def __init__(self, x, y, direction, damage, sensor):
-        self.pos = Vector2(x, y)
+    def __init__(self, pos, direction, damage, sensor):
+        self.pos = pos
         self.dir = direction
-        self.speed = 900
+        self.speed = 400
         self.damage = damage
         self.sensor = sensor
         self.alive = True
         self.creation_time = time.time()
-        self.type = "Bullet"
 
     def move(self, dt):
         self.pos += self.speed * dt * self.dir
@@ -22,3 +21,6 @@ class Bullet:
 
         if time.time() - self.creation_time > 10:
             self.alive = False
+
+    def accept(self, visitor):
+        return visitor.visit_bullet(self)

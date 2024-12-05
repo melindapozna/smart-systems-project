@@ -1,5 +1,5 @@
 from pygame import Vector2
-from src.bullet import Bullet
+from src.objects.bullet import Bullet
 import time
 
 class BasicNPC:
@@ -14,7 +14,6 @@ class BasicNPC:
         self.damage = 20
         self.bullet_ready = False
         self.prev_shot_time = time.time()
-        self.type = "Basic"
 
     def move(self, dt):
         self.look_at(self.player_sensor.get_reading())
@@ -39,8 +38,11 @@ class BasicNPC:
         if self.hp <= 0:
             self.alive = False
 
-    def shoot_bullet(self, collision_sensor):
+    def shoot_bullet(self, offset, collision_sensor):
         self.bullet_ready = False
         self.prev_shot_time = time.time()
-        return Bullet(self.pos.x, self.pos.y, self.dir, self.damage, collision_sensor)
 
+        return Bullet(self.pos + offset * self.dir, self.dir, self.damage, collision_sensor)
+
+    def accept(self, visitor):
+        return visitor.visit_basic_npc(self)
