@@ -1,14 +1,9 @@
 import pygame
 from time import sleep
 
-from src.objects.player import Player
-from src.objects.basic_npc import BasicNPC
-from src.object_visitors.movement_visitor import MovementVisitor
-from src.object_visitors.draw_visitor import DrawVisitor
-from src.object_visitors.shooting_visitor import ShootingVisitor
-from src.sensors.character_collision_sensor import CharacterCollisionSensor
-from src.sensors.border_collision_sensor import BorderCollisionSensor
-from src.sensors.player_position_sensor import PlayerPositionSensor
+from objects import *
+from object_visitors import *
+from sensors import *
 
 
 class Game:
@@ -18,7 +13,7 @@ class Game:
         self.screen = pygame.display.set_mode((1280, 720))
         self.clock = pygame.time.Clock()
         self.running = True
-        self.dt = 0
+        self.dt = 0     # delta time: seconds elapsed since the last frame
 
         self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
 
