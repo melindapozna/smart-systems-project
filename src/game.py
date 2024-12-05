@@ -2,14 +2,13 @@ import pygame
 from time import sleep
 
 from src.player import Player
-from src.npc_basic import BasicNPC
+from src.basic_npc import BasicNPC
 
 
 class BorderCollisionSensor:
     def get_reading(self, position):
         return not ((0 < position.x < screen.get_width()) and
                 (0 < position.y < screen.get_height()))
-
 
 class PlayerPositionSensor:
     def get_reading(self):
@@ -26,16 +25,13 @@ class PlayerCollisionSensor:
 
 class DrawVisitor:
     def visit_player(self, player):
-        pygame.draw.circle(screen, "green", player.pos, 30)
+        pygame.draw.circle(screen, "green", player.pos, radius["player"])
 
     def visit_basic_npc(self, basic_npc):
-        pygame.draw.circle(screen, "red", npc.pos, 30)
-        # TODO move out of here
-        if npc.bullet_ready:
-            npcs.append(npc.shoot_bullet(40, PlayerCollisionSensor()))
+        pygame.draw.circle(screen, "red", npc.pos, radius["basic_npc"])
 
     def visit_bullet(self, bullet):
-        pygame.draw.circle(screen, "yellow", bullet.pos, 5)
+        pygame.draw.circle(screen, "yellow", bullet.pos, radius["bullet"])
 
 
 class MovementVisitor:
@@ -58,7 +54,10 @@ class MovementVisitor:
         basic_npc.move(dt)
         # TODO maybe move it elsewhere?
         if npc.bullet_ready:
-            bullets.append(npc.shoot_bullet(40, PlayerCollisionSensor()))
+            bullets.append(npc.shoot_bullet(
+                offset=radius["basic_npc"] + 2 * radius["bullet"],
+                collision_sensor=PlayerCollisionSensor())
+            )
 
     def visit_bullet(self, bullet):
         bullet.move(dt)
@@ -84,6 +83,12 @@ bullets = []
 
 draw_visitor = DrawVisitor()
 movement_visitor = MovementVisitor()
+
+radius = {
+    "player": 30,
+    "basic_npc": 30,
+    "bullet": 5
+}
 
 while running:
     # poll for events

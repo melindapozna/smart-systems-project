@@ -11,7 +11,6 @@ class Bullet:
         self.sensor = sensor
         self.alive = True
         self.creation_time = time.time()
-        self.type = "Bullet"
 
     def move(self, dt):
         self.pos += self.speed * dt * self.dir

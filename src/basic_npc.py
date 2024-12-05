@@ -14,7 +14,6 @@ class BasicNPC:
         self.damage = 20
         self.bullet_ready = False
         self.prev_shot_time = time.time()
-        self.type = "Basic"
 
     def move(self, dt):
         self.look_at(self.player_sensor.get_reading())
