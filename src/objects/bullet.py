@@ -1,4 +1,3 @@
-from pygame import Vector2
 import time
 
 
@@ -19,6 +18,7 @@ class Bullet:
             target_hit.take_damage(self.damage)
             self.alive = False
 
+        # self-destroy bullet after 10 seconds
         if time.time() - self.creation_time > 10:
             self.alive = False
 

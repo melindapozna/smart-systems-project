@@ -2,6 +2,7 @@ from pygame import Vector2
 from src.objects.bullet import Bullet
 import time
 
+
 class BasicNPC:
     def __init__(self, x, y, speed, player_sensor, border_sensor):
         self.pos = Vector2(x, y)
@@ -27,6 +28,7 @@ class BasicNPC:
         if self.border_sensor.get_reading(self.pos):
             self.alive = False
 
+    # make the npc face a target position
     def look_at(self, position):
         dist = self.pos.distance_to(position)
         if dist == 0:
@@ -39,6 +41,7 @@ class BasicNPC:
             self.alive = False
 
     def shoot_bullet(self, offset, collision_sensor):
+        # offset: radius of the shooter to avoid bullet collision with the shooter itself
         self.bullet_ready = False
         self.prev_shot_time = time.time()
 
