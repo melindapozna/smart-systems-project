@@ -17,7 +17,8 @@ class Game:
 
         self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
 
-        self.player = Player(-1, self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
+        # IDs should be unique inside classes
+        self.player = Player(0, self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
 

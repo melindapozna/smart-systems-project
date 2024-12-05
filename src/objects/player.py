@@ -3,7 +3,7 @@ import pygame
 
 class Player:
     def __init__(self, id,  x, y, border_sensor):
-        self.id = id
+        self.id = "P" + str(id)
         self.x = x
         self.y = y
         self.pos = pygame.Vector2(x, y)

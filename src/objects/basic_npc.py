@@ -5,7 +5,7 @@ import time
 
 class BasicNPC:
     def __init__(self, id, x, y, speed, player_sensor, border_sensor, character_collision_sensor):
-        self.id = id
+        self.id = "BNPC" + str(id)
         self.pos = Vector2(x, y)
         self.speed = speed
         self.dir = Vector2(0, 1)
