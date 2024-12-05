@@ -17,7 +17,7 @@ class Game:
 
         self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
 
-        self.player = Player(self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
+        self.player = Player(-1, self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
 
@@ -25,11 +25,20 @@ class Game:
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs)
 
         # initialize an NPC
-        self.npcs.append(BasicNPC(self.screen.get_width() / 4,
+        self.npcs.append(BasicNPC(0,
+                                  self.screen.get_width() / 4,
                                   self.screen.get_height() / 4,
                                   90,
                                   self.player_position_sensor,
-                                  self.border_sensor))
+                                  self.border_sensor,
+                                  self.collision_sensor))
+        self.npcs.append(BasicNPC(1,
+                                  self.screen.get_width() / 3,
+                                  self.screen.get_height() / 3,
+                                  90,
+                                  self.player_position_sensor,
+                                  self.border_sensor,
+                                  self.collision_sensor))
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()

@@ -15,3 +15,4 @@ class CharacterCollisionSensor:
         for npc in self.npcs:
             if position.distance_to(npc.pos) < self.radius["basic_npc"]:
                 return npc
+        return None
