@@ -45,11 +45,6 @@ class BasicNPC:
     # make the npc face a target position
     def look_at(self, position):
         dist = self.pos.distance_to(position)
-
-        # face away from object collided with
-        #if self.collided:
-        #    self.dir = -1 * (position - self.pos) / dist
-        #    return
         if dist == 0:
             return
         self.dir = (position - self.pos) / dist
