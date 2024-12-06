@@ -5,10 +5,10 @@ class BasicNPCCollisionVisitor:
         self.basic_npc = basic_npc
 
     def visit_player(self, player):
-        self.execute_visitation(player)
+        self.add_movement_constraints(player)
 
     def visit_basic_npc(self, basic_npc):
-       self.execute_visitation(basic_npc)
+       self.add_movement_constraints(basic_npc)
 
     def visit_bullet(self, bullet):
         # Note: taking damage can be moved here
@@ -16,7 +16,7 @@ class BasicNPCCollisionVisitor:
         pass
 
     # call this in visit_basic_npc and visit_player
-    def execute_visitation(self, object):
+    def add_movement_constraints(self, object):
         if time.time() - self.basic_npc.prev_collision_time > 0.5:
             self.basic_npc.prev_collision_time = time.time()
             self.basic_npc.take_damage(1)

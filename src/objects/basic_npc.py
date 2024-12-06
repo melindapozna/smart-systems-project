@@ -125,23 +125,3 @@ class BasicNPC:
         # Reset NPC behavior after conversation ends
         self.is_in_conversation = False
         self.conversation_finished = True
-
-    # maybe it is not supposed to be in this file 
-    def draw_text(self, screen, text, x, y, font_size):
-        font = pygame.font.SysFont('Arial', font_size)
-        text_surface = font.render(text, True, (255, 255, 255))
-        screen.blit(text_surface, (x, y))
-
-    def render_conversation(self, screen):
-        if self.is_in_conversation and self.conversation_index < len(self.dialogue):
-            box_width = screen.get_width() - 150
-            box_height = 100
-            box_x = 50
-            box_y = screen.get_height() - box_height - 30
-            pygame.draw.rect(screen, (0, 0, 0), (box_x, box_y, box_width, box_height))  
-            pygame.draw.rect(screen, (255, 255, 255), (box_x, box_y, box_width, box_height), 2)
-            self.draw_text(screen, self.dialogue[self.conversation_index], box_x + 20, box_y + 30, 30)
-            prompt_text = "* Press SPACE to continue *"
-            prompt_y = box_y - 30  # Position slightly above the dialogue box
-            self.draw_text(screen, prompt_text, box_x + 20, prompt_y, 18)
-

@@ -52,11 +52,6 @@ class Game:
     def next_id(self):
         return self.id_provider.provide_id()
 
-    def render_lives(self):
-        # Render the player's remaining lives in the corner.
-        lives_text = self.font.render(f"Lives: {self.player.hp}", True, "white")
-        self.screen.blit(lives_text, (20, 20))
-
     def run(self):
         while self.running:
             # poll for events
@@ -85,7 +80,8 @@ class Game:
                     self.bullets.append(new_bullet)
                     
                 npc.update_conversation(self.player.pos, keys)
-                npc.render_conversation(self.screen)
+                self.draw_visitor.render_conversation(npc, self.screen)
+                        
 
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)
@@ -105,7 +101,7 @@ class Game:
             self.bullets[:] = list(filter(lambda x: x.alive, self.bullets))
 
             # Render lives to the screne 
-            self.render_lives()
+            self.draw_visitor.render_lives(self.player)
 
             # flip() the display to put your work on screen
             pygame.display.flip()
