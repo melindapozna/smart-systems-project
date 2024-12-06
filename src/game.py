@@ -22,6 +22,7 @@ class Game:
         self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
+        self.font = pygame.font.SysFont("freesansbold.ttf", 25)
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets)
@@ -50,6 +51,11 @@ class Game:
 
     def next_id(self):
         return self.id_provider.provide_id()
+
+    def render_lives(self):
+        # Render the player's remaining lives in the corner.
+        lives_text = self.font.render(f"Lives: {self.player.hp}", True, "white")
+        self.screen.blit(lives_text, (20, 20))
 
     def run(self):
         while self.running:
@@ -97,6 +103,9 @@ class Game:
             # Slice assignment so that the external references to the lists remain valid
             self.npcs[:] = list(filter(lambda x: x.alive, self.npcs))
             self.bullets[:] = list(filter(lambda x: x.alive, self.bullets))
+
+            # Render lives to the screne 
+            self.render_lives()
 
             # flip() the display to put your work on screen
             pygame.display.flip()
