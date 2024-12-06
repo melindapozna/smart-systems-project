@@ -27,7 +27,7 @@ class Game:
 
         # initialize an NPC
         self.npcs.append(BasicNPC(0,
-                                  self.screen.get_width() / 4,
+                                  self.screen.get_width() / 2,
                                   self.screen.get_height() / 4,
                                   90,
                                   self.player_position_sensor,

@@ -14,14 +14,16 @@ class BasicNPC:
         self.character_collision_sensor = character_collision_sensor
         self.hp = 50
         self.alive = True
-        self.damage = 10
+        self.damage = -1
         self.bullet_ready = False
         self.prev_shot_time = time.time()
         self.collided = False
         self.prev_collision_time = time.time()
+        self.turned_on_collision = False
 
     def move(self, dt):
-        self.look_at(self.player_sensor.get_reading())
+        if not self.collided:
+            self.look_at(self.player_sensor.get_reading())
         self.pos += self.speed * dt * self.dir
         colliding_object = self.character_collision_sensor.get_reading(self)
 
@@ -29,6 +31,7 @@ class BasicNPC:
         # and if the previous shot was at least 1 second ago
         if self.collided and time.time() - self.prev_collision_time > 2:
             self.collided = False
+            self.turned_on_collision = False
         elif not self.collided and not self.bullet_ready and time.time() - self.prev_shot_time > 1:
             self.bullet_ready = True
 
@@ -44,9 +47,9 @@ class BasicNPC:
         dist = self.pos.distance_to(position)
 
         # face away from object collided with
-        if self.collided:
-            self.dir = -1 * (position - self.pos) / dist
-            return
+        #if self.collided:
+        #    self.dir = -1 * (position - self.pos) / dist
+        #    return
         if dist == 0:
             return
         self.dir = (position - self.pos) / dist
@@ -66,9 +69,14 @@ class BasicNPC:
     def collide(self):
         self.prev_collision_time = time.time()
         self.collided = True
-        self.look_at(self.player_sensor.get_reading())
+        #self.look_at(self.player_sensor.get_reading())
         self.bullet_ready = False
         self.take_damage(1)
+        player_position = self.player_sensor.get_reading()
+        if not self.turned_on_collision:
+            #print(self.pos - player_position)
+            self.dir = -1 * self.dir
+            self.turned_on_collision = True
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
