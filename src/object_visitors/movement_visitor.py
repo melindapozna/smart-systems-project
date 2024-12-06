@@ -21,12 +21,6 @@ class MovementVisitor:
 
     def visit_basic_npc(self, basic_npc):
         basic_npc.move(self.dt)
-        # TODO maybe move it elsewhere?
-        # if npc.bullet_ready:
-        #     bullets.append(npc.shoot_bullet(
-        #         offset=radius["basic_npc"] + 2 * radius["bullet"],
-        #         collision_sensor=PlayerCollisionSensor())
-        #     )
 
     def visit_bullet(self, bullet):
         bullet.move(self.dt)

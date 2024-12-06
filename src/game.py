@@ -4,6 +4,7 @@ from time import sleep
 from objects import *
 from object_visitors import *
 from sensors import *
+from src.id_provider import IdProvider
 
 
 class Game:
@@ -14,26 +15,41 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.dt = 0     # delta time: seconds elapsed since the last frame
-
+        self.id_provider = IdProvider()
         self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
 
-        self.player = Player(self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
+
+        self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
-        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs)
+        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets)
+        # TODO CHANGE!!!
+        self.player.collision_sensor = self.collision_sensor
 
         # initialize an NPC
-        self.npcs.append(BasicNPC(self.screen.get_width() / 4,
+        self.npcs.append(BasicNPC(self.next_id(),
+                                  self.screen.get_width() / 2,
                                   self.screen.get_height() / 4,
                                   90,
                                   self.player_position_sensor,
-                                  self.border_sensor))
+                                  self.border_sensor,
+                                  self.collision_sensor))
+        self.npcs.append(BasicNPC(self.next_id(),
+                                  self.screen.get_width() / 3,
+                                  self.screen.get_height() / 3,
+                                  90,
+                                  self.player_position_sensor,
+                                  self.border_sensor,
+                                  self.collision_sensor))
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
-        self.shooting_visitor = ShootingVisitor(self.collision_sensor)
+        self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
+
+    def next_id(self):
+        return self.id_provider.provide_id()
 
     def run(self):
         while self.running:
