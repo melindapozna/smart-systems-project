@@ -5,6 +5,7 @@ class Player:
     def __init__(self, id,  x, y, border_sensor):
         self.id = id
         self.x = x
+        self.radius = 10
         self.y = y
         self.pos = pygame.Vector2(x, y)
         self.hp = 100

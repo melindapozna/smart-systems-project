@@ -6,6 +6,7 @@ import time
 class BasicNPC:
     def __init__(self, id, x, y, speed, player_sensor, border_sensor, character_collision_sensor):
         self.id = id
+        self.radius = 10
         self.pos = Vector2(x, y)
         self.speed = speed
         self.dir = Vector2(0, 1)
@@ -15,6 +16,7 @@ class BasicNPC:
         self.hp = 50
         self.alive = True
         self.damage = 20
+        self.bullet_radius = 2
         self.bullet_ready = False
         self.prev_shot_time = time.time()
         self.collided = False
@@ -54,12 +56,13 @@ class BasicNPC:
         if self.hp <= 0:
             self.alive = False
 
-    def shoot_bullet(self, offset, collision_sensor):
+    def shoot_bullet(self, collision_sensor):
         # offset: radius of the shooter to avoid bullet collision with the shooter itself
         self.bullet_ready = False
         self.prev_shot_time = time.time()
-
-        return Bullet(self.pos + offset * self.dir, self.dir, self.damage, collision_sensor)
+        offset = self.radius + self.bullet_radius
+        bullet_pos = self.pos + offset * self.dir
+        return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor)
 
     def collide(self):
         self.prev_collision_time = time.time()

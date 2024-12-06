@@ -2,10 +2,11 @@ import time
 
 
 class Bullet:
-    def __init__(self, pos, direction, damage, sensor):
+    def __init__(self, pos, direction, damage, radius, sensor):
         self.pos = pos
         self.dir = direction
         self.speed = 400
+        self.radius = 2
         self.damage = damage
         self.sensor = sensor
         self.alive = True
