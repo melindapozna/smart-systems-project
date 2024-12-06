@@ -1,5 +1,6 @@
 from pygame import Vector2
 from src.objects.bullet import Bullet
+from src.object_visitors.collisions.basic_npc_collision_visitor import BasicNPCCollisionVisitor
 import time
 
 
@@ -21,9 +22,9 @@ class BasicNPC:
         self.prev_shot_time = time.time()
         self.collided = False
         self.prev_collision_time = time.time()
-        self.turned_on_collision = False
         # Directions in which the NPC can't move
         self.constraints = []
+        self.collision_visitor = BasicNPCCollisionVisitor(self)
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -40,7 +41,7 @@ class BasicNPC:
         colliding_objects = self.character_collision_sensor.get_reading(self)
         if colliding_objects:
             for colliding_object in colliding_objects:
-                self.collide(colliding_object.pos)
+                colliding_object.accept(self.collision_visitor)
         self.look_at(self.player_sensor.get_reading())
         speed_vector = self.speed * self.dir
         speed_vector = self.process_constraints(speed_vector)
@@ -78,15 +79,7 @@ class BasicNPC:
     def collide(self, obstacle_pos):
         # Take damage on all collisons
         # TODO move into a visitor
-        if time.time() - self.prev_collision_time > 0.5:
-            self.prev_collision_time = time.time()
-            self.take_damage(1)
-
-        vector_to_obstacle = obstacle_pos - self.pos
-        dist_to_obstacle = vector_to_obstacle.length()
-        if dist_to_obstacle == 0:
-            return # What even is this case
-        self.add_constraint(1 / dist_to_obstacle * vector_to_obstacle)
+        pass
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
