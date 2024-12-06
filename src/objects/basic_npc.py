@@ -15,7 +15,7 @@ class BasicNPC:
         self.character_collision_sensor = character_collision_sensor
         self.hp = 50
         self.alive = True
-        self.damage = 5
+        self.damage = 10
         self.bullet_radius = 2
         self.bullet_ready = False
         self.prev_shot_time = time.time()

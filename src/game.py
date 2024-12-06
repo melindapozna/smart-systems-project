@@ -24,7 +24,7 @@ class Game:
         self.bullets = []
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
-        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs)
+        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets)
         # TODO CHANGE!!!
         self.player.collision_sensor = self.collision_sensor
 

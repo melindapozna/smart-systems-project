@@ -13,4 +13,6 @@ class PlayerCollisionVisitor:
         self.player.add_constraint(1 / dist_to_obstacle * vector_to_obstacle)
 
     def visit_bullet(self, bullet):
-        self.player.take_damage(bullet.damage)
+        # Note: taking damage can be moved here
+        # self.player.take_damage(bullet.damage)
+        pass

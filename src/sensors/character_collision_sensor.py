@@ -1,7 +1,8 @@
 class CharacterCollisionSensor:
-    def __init__(self, player, npcs):
+    def __init__(self, player, npcs, bullets):
         self.player = player
         self.npcs = npcs
+        self.bullets = bullets
 
     def get_reading(self, object):
         collided_objects = []
