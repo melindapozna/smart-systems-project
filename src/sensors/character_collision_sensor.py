@@ -1,11 +1,5 @@
 class CharacterCollisionSensor:
     def __init__(self, player, npcs):
-        # TODO move the radius outside of this class
-        self.radius = {
-            "player": 10,
-            "basic_npc": 10,
-            "bullet": 2
-        }
         self.player = player
         self.npcs = npcs
 
