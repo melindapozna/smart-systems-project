@@ -4,6 +4,7 @@ from time import sleep
 from objects import *
 from object_visitors import *
 from sensors import *
+from src.id_provider import IdProvider
 
 
 class Game:
@@ -14,11 +15,11 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.dt = 0     # delta time: seconds elapsed since the last frame
-
+        self.id_provider = IdProvider()
         self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
 
-        # IDs should be unique inside classes
-        self.player = Player(0, self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
+
+        self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
 
@@ -26,14 +27,14 @@ class Game:
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs)
 
         # initialize an NPC
-        self.npcs.append(BasicNPC(0,
+        self.npcs.append(BasicNPC(self.next_id(),
                                   self.screen.get_width() / 2,
                                   self.screen.get_height() / 4,
                                   90,
                                   self.player_position_sensor,
                                   self.border_sensor,
                                   self.collision_sensor))
-        self.npcs.append(BasicNPC(1,
+        self.npcs.append(BasicNPC(self.next_id(),
                                   self.screen.get_width() / 3,
                                   self.screen.get_height() / 3,
                                   90,
@@ -44,6 +45,9 @@ class Game:
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor)
+
+    def next_id(self):
+        return self.id_provider.provide_id()
 
     def run(self):
         while self.running:
