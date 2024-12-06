@@ -1,4 +1,5 @@
 import pygame
+from src.object_visitors.collisions.player_collision_visitor import PlayerCollisionVisitor
 
 
 class Player:
@@ -14,6 +15,7 @@ class Player:
         self.border_sensor = border_sensor
         self.collision_sensor = None
         self.constraints = []
+        self.collision_visitor = PlayerCollisionVisitor(self)
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -33,7 +35,7 @@ class Player:
         colliding_objects = self.collision_sensor.get_reading(self)
         if colliding_objects:
             for colliding_object in colliding_objects:
-                self.collide(colliding_object.pos)
+                colliding_object.accept(self.collision_visitor)
 
         speed_vector = self.speed * direction
         speed_vector = self.process_constraints(speed_vector)
@@ -41,11 +43,7 @@ class Player:
         self.pos += dt * speed_vector
 
     def collide(self, obstacle_pos):
-        vector_to_obstacle = obstacle_pos - self.pos
-        dist_to_obstacle = vector_to_obstacle.length()
-        if dist_to_obstacle == 0:
-            return  # What even is this case
-        self.add_constraint(1 / dist_to_obstacle * vector_to_obstacle)
+      pass
 
     def take_damage(self, damage):
         self.hp -= damage
