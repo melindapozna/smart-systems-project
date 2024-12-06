@@ -14,7 +14,7 @@ class BasicNPC:
         self.character_collision_sensor = character_collision_sensor
         self.hp = 50
         self.alive = True
-        self.damage = 20
+        self.damage = 10
         self.bullet_ready = False
         self.prev_shot_time = time.time()
         self.collided = False
@@ -23,7 +23,7 @@ class BasicNPC:
     def move(self, dt):
         self.look_at(self.player_sensor.get_reading())
         self.pos += self.speed * dt * self.dir
-        colliding_object = self.character_collision_sensor.get_reading(self.pos)
+        colliding_object = self.character_collision_sensor.get_reading(self)
 
         # Shoot a bullet if the previous collision was at least 2 seconds ago
         # and if the previous shot was at least 1 second ago
@@ -36,7 +36,7 @@ class BasicNPC:
         if self.border_sensor.get_reading(self.pos):
             self.alive = False
 
-        if colliding_object and colliding_object.id != self.id:
+        if colliding_object:
             self.collide()
 
     # make the npc face a target position
@@ -68,7 +68,7 @@ class BasicNPC:
         self.collided = True
         self.look_at(self.player_sensor.get_reading())
         self.bullet_ready = False
-        self.take_damage(5)
+        self.take_damage(1)
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)

@@ -9,10 +9,17 @@ class CharacterCollisionSensor:
         self.player = player
         self.npcs = npcs
 
-    def get_reading(self, position):
-        if position.distance_to(self.player.pos) < self.radius["player"]:
+    def get_reading(self, object):
+        if object.pos.distance_to(self.player.pos) < self.radius["player"]:
             return self.player
         for npc in self.npcs:
-            if position.distance_to(npc.pos) < self.radius["basic_npc"]:
-                return npc
+            try:
+
+                if object.pos.distance_to(npc.pos) < self.radius["basic_npc"] and npc.id != object.id:
+                    return npc
+
+            # To avoid error on collision with bullets, as they have no IDs implemented
+            # TODO
+            except AttributeError:
+                return None
         return None
