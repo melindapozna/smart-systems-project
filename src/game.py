@@ -61,7 +61,8 @@ class Game:
 
             # fill the screen with a color to wipe away anything from last frame
             self.screen.fill("purple")
-            
+            keys = pygame.key.get_pressed()
+
             self.movement_visitor.dt = self.dt
             self.player.accept(self.draw_visitor)
             self.player.accept(self.movement_visitor)
@@ -76,6 +77,9 @@ class Game:
                 new_bullet = npc.accept(self.shooting_visitor)
                 if new_bullet:
                     self.bullets.append(new_bullet)
+                    
+                npc.update_conversation(self.player.pos, keys)
+                npc.render_conversation(self.screen)
 
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)
