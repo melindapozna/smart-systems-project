@@ -25,6 +25,8 @@ class Game:
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs)
+        # TODO CHANGE!!!
+        self.player.collision_sensor = self.collision_sensor
 
         # initialize an NPC
         self.npcs.append(BasicNPC(self.next_id(),
@@ -44,7 +46,7 @@ class Game:
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
-        self.shooting_visitor = ShootingVisitor(self.collision_sensor)
+        self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
 
     def next_id(self):
         return self.id_provider.provide_id()
