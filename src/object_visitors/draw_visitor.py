@@ -5,6 +5,7 @@ class DrawVisitor:
     def __init__(self, screen, player_pos):
         self.screen = screen
         self.font = pygame.font.SysFont("Arial", 24)  # Font for rendering text
+        self.smaller_font = pygame.font.SysFont("Arial", 14)  # Font for rendering text
         self.player_pos = player_pos
         
     def visit_player(self, player):
@@ -15,6 +16,7 @@ class DrawVisitor:
         pygame.draw.circle(self.screen, "red", basic_npc.pos, basic_npc.radius)
         self.update_conversation(basic_npc)
         self.render_conversation(basic_npc)
+        self.render_npc_stats(basic_npc)
 
     def visit_bullet(self, bullet):
         pygame.draw.circle(self.screen, "yellow", bullet.pos, bullet.radius)
@@ -24,6 +26,13 @@ class DrawVisitor:
         # Render the player's remaining lives in the corner.
         lives_text = self.font.render(f"Lives: {player.hp}", True, "white")
         self.screen.blit(lives_text, (20, 20))
+        
+    # useless, but  wanted to see how it heals
+    def render_npc_stats(self, npc):
+        stats_text = f"HP: {npc.hp} | DMG: {npc.damage}"
+        text_surface = self.smaller_font.render(stats_text, True, "white")
+        text_position = npc.pos + pygame.Vector2(0, -npc.radius - 20)
+        self.screen.blit(text_surface, (text_position.x, text_position.y))
 
     def render_conversation(self, npc):
         if npc.is_in_conversation and npc.conversation_index < len(npc.dialogue):

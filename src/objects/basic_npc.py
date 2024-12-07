@@ -23,6 +23,7 @@ class BasicNPC:
         self.prev_shot_time = time.time()
         self.collided = False
         self.prev_collision_time = time.time()
+        self.prev_communication_time = time.time()
         # Directions in which the NPC can't move
         self.constraints = []
         self.collision_visitor = BasicNPCCollisionVisitor(self)

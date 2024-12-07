@@ -9,6 +9,8 @@ class BasicNPCCollisionVisitor:
 
     def visit_basic_npc(self, basic_npc):
        self.add_movement_constraints(basic_npc)
+       self.communicate_with_npc(basic_npc)
+
 
     def visit_bullet(self, bullet):
         # Note: taking damage can be moved here
@@ -26,3 +28,12 @@ class BasicNPCCollisionVisitor:
         if dist_to_obstacle == 0:
             return  # What even is this case
         self.basic_npc.add_constraint(1 / dist_to_obstacle * vector_to_obstacle)
+
+    # communication between two NPC (they can heal each other for example)   
+    def communicate_with_npc(self, other_npc):
+        if time.time() - self.basic_npc.prev_communication_time > 0.5:
+            self.basic_npc.prev_communication_time = time.time()
+            self.basic_npc.hp = 50
+            other_npc.hp = 50
+
+            print(f"{self.basic_npc.id} and {other_npc.id} have been healed to 50 HP.")
