@@ -24,6 +24,7 @@ class BasicNPC:
         self.prev_collision_time = time.time()
         # Directions in which the NPC can't move
         self.constraints = []
+        self.items = []
         self.collision_visitor = BasicNPCCollisionVisitor(self)
 
     def add_constraint(self, constraint):
@@ -75,6 +76,9 @@ class BasicNPC:
         offset = self.radius + self.bullet_radius
         bullet_pos = self.pos + offset * self.dir
         return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
+
+    def pick_up(self, item):
+        self.items.append(item)
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)

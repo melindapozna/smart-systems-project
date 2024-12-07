@@ -18,6 +18,10 @@ class BasicNPCCollisionVisitor:
     def visit_obstacle(self, obstacle):
         self.add_movement_constraints(obstacle, 0)
 
+    def visit_coin(self, coin):
+        self.basic_npc.pick_up(coin)
+        coin.alive = False
+
     # call this in visit_basic_npc and visit_player
     def add_movement_constraints(self, object, damage):
         if time.time() - self.basic_npc.prev_collision_time > 0.5:

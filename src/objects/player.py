@@ -15,6 +15,7 @@ class Player:
         self.border_sensor = border_sensor
         self.collision_sensor = None
         self.constraints = []
+        self.items = []
         self.collision_visitor = PlayerCollisionVisitor(self)
 
     def add_constraint(self, constraint):
@@ -46,6 +47,9 @@ class Player:
         self.hp -= damage
         if self.hp <= 0:
             self.alive = False
+
+    def pick_up(self, item):
+        self.items.append(item)
 
     def accept(self, visitor):
         return visitor.visit_player(self)

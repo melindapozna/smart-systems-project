@@ -13,15 +13,17 @@ class Game:
     def __init__(self):
         # pygame setup
         pygame.init()
-        self.screen = pygame.display.set_mode((1280, 720))
+        self.w = 1280
+        self.h = 720
+        self.screen = pygame.display.set_mode((self.w, self.h))
         self.clock = pygame.time.Clock()
         self.running = True
         self.dt = 0     # delta time: seconds elapsed since the last frame
         self.id_provider = IdProvider()
-        self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
+        self.border_sensor = BorderCollisionSensor(self.w, self.h)
 
 
-        self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
+        self.player = Player(self.next_id(), self.w / 2, self.h / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
         self.obstacles = []
@@ -33,27 +35,27 @@ class Game:
 
         # initialize an NPC
         self.npcs.append(BasicNPC(self.next_id(),
-                                  self.screen.get_width() / 2,
-                                  self.screen.get_height() / 4,
+                                  self.w / 2,
+                                  self.h / 4,
                                   90,
                                   self.player_position_sensor,
                                   self.border_sensor,
                                   self.collision_sensor))
         self.npcs.append(BasicNPC(self.next_id(),
-                                  self.screen.get_width() / 3,
-                                  self.screen.get_height() / 3,
+                                  self.w / 3,
+                                  self.h / 3,
                                   90,
                                   self.player_position_sensor,
                                   self.border_sensor,
                                   self.collision_sensor))
 
         # generate 30 objects in random size and position if they don't already collide with something
-        for i in range(30):
+        for i in range(2):
             radius = random.randint(5, 20)
             object_appendable = False
             while not object_appendable:
-                position = pygame.Vector2(random.randrange(self.screen.get_width()),
-                                          random.randrange(self.screen.get_height()))
+                position = pygame.Vector2(random.randrange(self.w),
+                                          random.randrange(self.h))
                 curr_obstacle = Obstacle(self.next_id(),
                                                radius,
                                                position)
@@ -61,7 +63,7 @@ class Game:
                     self.obstacles.append(curr_obstacle)
                     object_appendable = True
 
-
+        self.items = [Coin(30, 30, self.next_id())]
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
@@ -103,11 +105,14 @@ class Game:
             for obstacle in self.obstacles:
                 obstacle.accept(self.draw_visitor)
 
+            for item in self.items:
+                item.accept(self.draw_visitor)
+
             if not self.player.alive:
                 self.screen.fill("red")
                 text = pygame.font.Font("freesansbold.ttf", 32).render("Game Over", True, "black")
                 self.screen.blit(text,
-                                 (self.screen.get_width() / 2 - text.get_width() / 2, self.screen.get_height() / 2))
+                                 (self.w / 2 - text.get_width() / 2, self.h / 2))
                 pygame.display.flip()
                 sleep(1)
                 self.running = False
