@@ -14,7 +14,7 @@ class PlayerCollisionVisitor:
         pass
 
     def visit_obstacle(self, obstacle):
-       self.add_movement_constraints(obstacle)
+        self.add_movement_constraints(obstacle)
 
     def add_movement_constraints(self, object):
         vector_to_obstacle = object.pos - self.player.pos
