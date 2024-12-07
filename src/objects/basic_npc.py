@@ -25,6 +25,7 @@ class BasicNPC:
         self.prev_collision_time = time.time()
         # Directions in which the NPC can't move
         self.constraints = []
+        self.items = []
         self.collision_visitor = BasicNPCCollisionVisitor(self)
         self.fire_rate = 1
         self.game_stats = game_stats
@@ -80,10 +81,8 @@ class BasicNPC:
         self.game_stats.track_bullet_fired()
         return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
 
-    def collide(self, obstacle_pos):
-        # Take damage on all collisons
-        # TODO move into a visitor
-        pass
+    def pick_up(self, item):
+        self.items.append(item)
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)

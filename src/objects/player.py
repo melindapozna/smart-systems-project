@@ -16,6 +16,7 @@ class Player:
         self.border_sensor = border_sensor
         self.collision_sensor = None
         self.constraints = []
+        self.items = []
         self.collision_visitor = PlayerCollisionVisitor(self)
         self.game_stats = game_stats
 
@@ -44,14 +45,14 @@ class Player:
 
         self.pos += dt * speed_vector
 
-    def collide(self, obstacle_pos):
-      pass
-
     def take_damage(self, damage):
         self.hp -= damage
         if self.hp <= 0:
             self.alive = False
         self.game_stats.register_player_hit()
+
+    def pick_up(self, item):
+        self.items.append(item)
 
     def accept(self, visitor):
         return visitor.visit_player(self)
