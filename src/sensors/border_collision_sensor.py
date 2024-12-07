@@ -1,6 +1,5 @@
 class BorderCollisionSensor:
     def __init__(self, w, h):
-        # screen width and height
         self.w = w
         self.h = h
 

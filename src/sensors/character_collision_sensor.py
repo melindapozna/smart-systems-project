@@ -1,14 +1,17 @@
 class CharacterCollisionSensor:
-    def __init__(self, player, npcs, bullets):
+    def __init__(self, player, npcs):
+        # TODO move the radius outside of this class
+        self.radius = {
+            "player": 10,
+            "basic_npc": 10,
+            "bullet": 2
+        }
         self.player = player
         self.npcs = npcs
-        self.bullets = bullets
 
-    def get_reading(self, object):
-        collided_objects = []
-        if self.player.id != object.id and object.pos.distance_to(self.player.pos) < self.player.radius + object.radius:
-            collided_objects.append(self.player)
+    def get_reading(self, position):
+        if position.distance_to(self.player.pos) < self.radius["player"]:
+            return self.player
         for npc in self.npcs:
-            if npc.id != object.id and object.pos.distance_to(npc.pos) <= npc.radius + object.radius:
-                collided_objects.append(npc)
-        return collided_objects
+            if position.distance_to(npc.pos) < self.radius["basic_npc"]:
+                return npc
