@@ -11,7 +11,10 @@ class DrawVisitor:
         pygame.draw.circle(self.screen, "red", basic_npc.pos, basic_npc.radius)
 
     def visit_bullet(self, bullet):
-        pygame.draw.circle(self.screen, "yellow", bullet.pos, bullet.radius)
+        pygame.draw.circle(self.screen, "orange", bullet.pos, bullet.radius)
 
     def visit_obstacle(self, obstacle):
         pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)
+
+    def visit_coin(self, coin):
+        pygame.draw.circle(self.screen, "yellow", coin.pos, coin.radius)
