@@ -1,9 +1,10 @@
 import pygame
 from src.object_visitors.collisions.player_collision_visitor import PlayerCollisionVisitor
+from src.game_stats import GameStats
 
 
 class Player:
-    def __init__(self, id,  x, y, border_sensor):
+    def __init__(self, id,  x, y, border_sensor, game_stats):
         self.id = id
         self.x = x
         self.radius = 10
@@ -16,6 +17,7 @@ class Player:
         self.collision_sensor = None
         self.constraints = []
         self.collision_visitor = PlayerCollisionVisitor(self)
+        self.game_stats = game_stats
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -49,6 +51,7 @@ class Player:
         self.hp -= damage
         if self.hp <= 0:
             self.alive = False
+        self.game_stats.register_player_hit()
 
     def accept(self, visitor):
         return visitor.visit_player(self)

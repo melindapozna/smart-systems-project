@@ -1,11 +1,12 @@
 from pygame import Vector2
 from src.objects.bullet import Bullet
 from src.object_visitors.collisions.basic_npc_collision_visitor import BasicNPCCollisionVisitor
+from src.game_stats import GameStats
 import time
 
 
 class BasicNPC:
-    def __init__(self, id, x, y, speed, player_sensor, border_sensor, character_collision_sensor):
+    def __init__(self, id, x, y, speed, player_sensor, border_sensor, character_collision_sensor, game_stats):
         self.id = id
         self.radius = 10
         self.pos = Vector2(x, y)
@@ -25,6 +26,8 @@ class BasicNPC:
         # Directions in which the NPC can't move
         self.constraints = []
         self.collision_visitor = BasicNPCCollisionVisitor(self)
+        self.fire_rate = 1
+        self.game_stats = game_stats
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -49,7 +52,7 @@ class BasicNPC:
         self.pos += dt * speed_vector
 
         # Shoot a bullet if the previous shot was at least 1 second ago
-        if time.time() - self.prev_shot_time > 1:
+        if time.time() - self.prev_shot_time > self.fire_rate:
             self.bullet_ready = True
 
         # Kill the NPC if it reaches the border
@@ -74,6 +77,7 @@ class BasicNPC:
         # offset: radius of the shooter to avoid bullet collision with the shooter itself
         offset = self.radius + self.bullet_radius
         bullet_pos = self.pos + offset * self.dir
+        self.game_stats.track_bullet_fired()
         return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
 
     def collide(self, obstacle_pos):

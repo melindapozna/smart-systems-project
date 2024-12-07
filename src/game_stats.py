@@ -9,6 +9,10 @@ class GameStats:
 
     def track_bullet_fired(self):
         self.basic_npc_shots_fired += 1
+
+    def register_player_hit(self):
+        curr_time = time.time()
+        self.last_hit_time.append(curr_time)
     
     def get_basic_npc_accuracy(self):
         if self.basic_npc_shots_fired == 0:

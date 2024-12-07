@@ -5,7 +5,8 @@ from objects import *
 from object_visitors import *
 from sensors import *
 from src.id_provider import IdProvider
-
+from src.object_visitors.difficulty.difficulty_manager import DifficultyManager
+from src.game_stats import GameStats
 
 class Game:
     def __init__(self):
@@ -17,9 +18,9 @@ class Game:
         self.dt = 0     # delta time: seconds elapsed since the last frame
         self.id_provider = IdProvider()
         self.border_sensor = BorderCollisionSensor(self.screen.get_width(), self.screen.get_height())
+        self.game_stats = GameStats()
 
-
-        self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
+        self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor, self.game_stats)
         self.npcs = []
         self.bullets = []
 
@@ -35,18 +36,22 @@ class Game:
                                   90,
                                   self.player_position_sensor,
                                   self.border_sensor,
-                                  self.collision_sensor))
+                                  self.collision_sensor,
+                                  self.game_stats))
         self.npcs.append(BasicNPC(self.next_id(),
                                   self.screen.get_width() / 3,
                                   self.screen.get_height() / 3,
                                   90,
                                   self.player_position_sensor,
                                   self.border_sensor,
-                                  self.collision_sensor))
+                                  self.collision_sensor,
+                                  self.game_stats))
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
+        self.difficulty_manager = DifficultyManager()
+        
 
     def next_id(self):
         return self.id_provider.provide_id()
@@ -65,6 +70,18 @@ class Game:
             self.movement_visitor.dt = self.dt
             self.player.accept(self.draw_visitor)
             self.player.accept(self.movement_visitor)
+
+            #handle difficulty changes during the run
+            npc_accuracy = self.game_stats.get_basic_npc_accuracy()
+            if npc_accuracy < 0.1:
+                self.basic_npc_difficulty_level = min(self.difficulty_manager.basic_npc_difficulty_level + 1, self.difficulty_manager.basic_npc_max_difficulty)
+                for npc in self.npcs:
+                    self.difficulty_manager.visit_basic_npc(npc)
+            player_hit_treshold = self.game_stats.player_hit_treshold()
+            if player_hit_treshold:
+                self.player_difficulty_level = min(self.difficulty_manager.player_difficulty_level + 1, self.difficulty_manager.player_max_difficulty)
+                self.basic_npc_difficulty_level = min(self.difficulty_manager.basic_npc_difficulty_level + 1, self.difficulty_manager.basic_npc_max_difficulty )
+                self.difficulty_manager.visit_player(self.player)
 
             new_bullet = self.player.accept(self.shooting_visitor)
             if new_bullet:
