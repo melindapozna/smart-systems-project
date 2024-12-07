@@ -16,3 +16,7 @@ class ShootingVisitor:
 
     def visit_bullet(self, bullet):
         return None # TODO maybe the bullets split or something idk
+
+    def visit_obstacle(self, obstacle):
+        # obstacles don't shoot
+        return None
