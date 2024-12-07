@@ -1,3 +1,4 @@
+import pygame
 from pygame import Vector2
 from src.objects.bullet import Bullet
 from src.object_visitors.collisions.basic_npc_collision_visitor import BasicNPCCollisionVisitor
@@ -22,9 +23,22 @@ class BasicNPC:
         self.prev_shot_time = time.time()
         self.collided = False
         self.prev_collision_time = time.time()
+        self.prev_communication_time = time.time()
         # Directions in which the NPC can't move
         self.constraints = []
         self.collision_visitor = BasicNPCCollisionVisitor(self)
+
+        # Added communication
+        self.dialogue = [
+            "Hello, player!",
+            "Let's start our fight.",
+            "Good luck!"
+        ]
+        self.is_in_conversation = False
+        self.conversation_index = 0
+        self.last_key_press_time = 0
+        self.key_debounce_delay = 0.2
+        self.conversation_finished = False
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -38,23 +52,24 @@ class BasicNPC:
         return speed_vector
 
     def move(self, dt):
-        colliding_objects = self.character_collision_sensor.get_reading(self)
-        if colliding_objects:
-            for colliding_object in colliding_objects:
-                colliding_object.accept(self.collision_visitor)
-        self.look_at(self.player_sensor.get_reading())
-        speed_vector = self.speed * self.dir
-        speed_vector = self.process_constraints(speed_vector)
+        if not self.is_in_conversation:
+            colliding_objects = self.character_collision_sensor.get_reading(self)
+            if colliding_objects:
+                for colliding_object in colliding_objects:
+                    colliding_object.accept(self.collision_visitor)
+            self.look_at(self.player_sensor.get_reading())
+            speed_vector = self.speed * self.dir
+            speed_vector = self.process_constraints(speed_vector)
 
-        self.pos += dt * speed_vector
+            self.pos += dt * speed_vector
 
-        # Shoot a bullet if the previous shot was at least 1 second ago
-        if time.time() - self.prev_shot_time > 1:
-            self.bullet_ready = True
+            # Shoot a bullet if the previous shot was at least 1 second ago
+            if time.time() - self.prev_shot_time > 1:
+                self.bullet_ready = True
 
-        # Kill the NPC if it reaches the border
-        if self.border_sensor.get_reading(self.pos):
-            self.alive = False
+            # Kill the NPC if it reaches the border
+            if self.border_sensor.get_reading(self.pos):
+                self.alive = False
 
     # make the npc face a target position
     def look_at(self, position):
@@ -69,12 +84,13 @@ class BasicNPC:
             self.alive = False
 
     def shoot_bullet(self, collision_sensor, bullet_id):
-        self.bullet_ready = False
-        self.prev_shot_time = time.time()
-        # offset: radius of the shooter to avoid bullet collision with the shooter itself
-        offset = self.radius + self.bullet_radius
-        bullet_pos = self.pos + offset * self.dir
-        return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
+        if not self.is_in_conversation:
+            self.bullet_ready = False
+            self.prev_shot_time = time.time()
+            # offset: radius of the shooter to avoid bullet collision with the shooter itself
+            offset = self.radius + self.bullet_radius
+            bullet_pos = self.pos + offset * self.dir
+            return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
 
     def collide(self, obstacle_pos):
         # Take damage on all collisons
@@ -83,3 +99,18 @@ class BasicNPC:
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
+
+    def start_conversation(self):
+        self.is_in_conversation = True
+        self.conversation_index = 0
+
+    def advance_dialogue(self):
+        self.conversation_index += 1
+        if self.conversation_index >= len(self.dialogue):
+            print("hereeeeeee")
+            self.end_conversation()
+
+    def end_conversation(self):
+        # Reset NPC behavior after conversation ends
+        self.is_in_conversation = False
+        self.conversation_finished = True

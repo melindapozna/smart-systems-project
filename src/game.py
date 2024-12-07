@@ -22,6 +22,7 @@ class Game:
         self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
+        self.font = pygame.font.SysFont("freesansbold.ttf", 25)
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets)
@@ -44,7 +45,7 @@ class Game:
                                   self.border_sensor,
                                   self.collision_sensor))
 
-        self.draw_visitor = DrawVisitor(self.screen)
+        self.draw_visitor = DrawVisitor(self.screen, self.player.pos)
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
 
@@ -61,7 +62,7 @@ class Game:
 
             # fill the screen with a color to wipe away anything from last frame
             self.screen.fill("purple")
-            
+
             self.movement_visitor.dt = self.dt
             self.player.accept(self.draw_visitor)
             self.player.accept(self.movement_visitor)
@@ -76,7 +77,7 @@ class Game:
                 new_bullet = npc.accept(self.shooting_visitor)
                 if new_bullet:
                     self.bullets.append(new_bullet)
-
+                    
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)
                 bullet.accept(self.movement_visitor)
