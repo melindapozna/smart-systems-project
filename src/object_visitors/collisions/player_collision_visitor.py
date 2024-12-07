@@ -6,7 +6,7 @@ class PlayerCollisionVisitor:
         pass
 
     def visit_basic_npc(self, basic_npc):
-        self.thing(basic_npc)
+        self.add_constraint_with_params(basic_npc)
 
     def visit_bullet(self, bullet):
         # Note: taking damage can be moved here
@@ -14,9 +14,9 @@ class PlayerCollisionVisitor:
         pass
 
     def visit_obstacle(self, obstacle):
-       self.thing(obstacle)
+       self.add_constraint_with_params(obstacle)
 
-    def thing(self, object):
+    def add_constraint_with_params(self, object):
         vector_to_obstacle = object.pos - self.player.pos
         dist_to_obstacle = vector_to_obstacle.length()
         if dist_to_obstacle == 0:
