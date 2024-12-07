@@ -29,7 +29,7 @@ class BasicNPCCollisionVisitor:
             return  # What even is this case
         self.basic_npc.add_constraint(1 / dist_to_obstacle * vector_to_obstacle)
 
-    # communication between two NPC (they can heal each other for example)   
+    # communication between two NPC (didn't know what info they can share, so now they can heal each other for example)   
     def communicate_with_npc(self, other_npc):
         if time.time() - self.basic_npc.prev_communication_time > 0.5:
             self.basic_npc.prev_communication_time = time.time()
