@@ -76,10 +76,5 @@ class BasicNPC:
         bullet_pos = self.pos + offset * self.dir
         return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
 
-    def collide(self, obstacle_pos):
-        # Take damage on all collisons
-        # TODO move into a visitor
-        pass
-
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)

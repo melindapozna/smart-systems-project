@@ -1,3 +1,5 @@
+import random
+
 import pygame
 from time import sleep
 
@@ -22,9 +24,10 @@ class Game:
         self.player = Player(self.next_id(), self.screen.get_width() / 2, self.screen.get_height() / 2, self.border_sensor)
         self.npcs = []
         self.bullets = []
+        self.obstacles = []
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
-        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets)
+        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles)
         # TODO CHANGE!!!
         self.player.collision_sensor = self.collision_sensor
 
@@ -44,6 +47,22 @@ class Game:
                                   self.border_sensor,
                                   self.collision_sensor))
 
+        # generate 30 objects in random size and position if they don't already collide with something
+        for i in range(30):
+            radius = random.randint(5, 20)
+            object_appendable = False
+            while not object_appendable:
+                position = pygame.Vector2(random.randrange(self.screen.get_width()),
+                                          random.randrange(self.screen.get_height()))
+                curr_obstacle = Obstacle(self.next_id(),
+                                               radius,
+                                               position)
+                if not len(self.collision_sensor.get_reading(curr_obstacle)):
+                    self.obstacles.append(curr_obstacle)
+                    object_appendable = True
+
+
+
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
@@ -60,7 +79,7 @@ class Game:
                     self.running = False
 
             # fill the screen with a color to wipe away anything from last frame
-            self.screen.fill("purple")
+            self.screen.fill("sienna4")
             
             self.movement_visitor.dt = self.dt
             self.player.accept(self.draw_visitor)
@@ -80,6 +99,9 @@ class Game:
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)
                 bullet.accept(self.movement_visitor)
+
+            for obstacle in self.obstacles:
+                obstacle.accept(self.draw_visitor)
 
             if not self.player.alive:
                 self.screen.fill("red")
