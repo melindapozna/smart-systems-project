@@ -45,7 +45,7 @@ class Game:
                                   self.border_sensor,
                                   self.collision_sensor))
 
-        self.draw_visitor = DrawVisitor(self.screen)
+        self.draw_visitor = DrawVisitor(self.screen, self.player.pos)
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
 
@@ -62,7 +62,6 @@ class Game:
 
             # fill the screen with a color to wipe away anything from last frame
             self.screen.fill("purple")
-            keys = pygame.key.get_pressed()
 
             self.movement_visitor.dt = self.dt
             self.player.accept(self.draw_visitor)
@@ -79,10 +78,6 @@ class Game:
                 if new_bullet:
                     self.bullets.append(new_bullet)
                     
-                npc.update_conversation(self.player.pos, keys)
-                self.draw_visitor.render_conversation(npc, self.screen)
-                        
-
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)
                 bullet.accept(self.movement_visitor)
@@ -99,9 +94,6 @@ class Game:
             # Slice assignment so that the external references to the lists remain valid
             self.npcs[:] = list(filter(lambda x: x.alive, self.npcs))
             self.bullets[:] = list(filter(lambda x: x.alive, self.bullets))
-
-            # Render lives to the screne 
-            self.draw_visitor.render_lives(self.player)
 
             # flip() the display to put your work on screen
             pygame.display.flip()

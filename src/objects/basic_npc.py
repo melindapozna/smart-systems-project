@@ -98,18 +98,6 @@ class BasicNPC:
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
-    
-    def update_conversation(self, player_pos, keys):
-        if not self.conversation_finished and not self.is_in_conversation:
-            distance = self.pos.distance_to(player_pos)
-            if distance < 100:  # Trigger conversation if player is close enough
-                self.start_conversation()
-
-        if self.is_in_conversation:
-            current_time = time.time()
-            if keys[pygame.K_SPACE] and current_time - self.last_key_press_time > self.key_debounce_delay:
-                self.advance_dialogue()
-                self.last_key_press_time = current_time
 
     def start_conversation(self):
         self.is_in_conversation = True
