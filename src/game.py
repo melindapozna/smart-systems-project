@@ -27,9 +27,10 @@ class Game:
         self.npcs = []
         self.bullets = []
         self.obstacles = []
+        self.items = [Coin(30, 30, self.next_id())]
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
-        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles)
+        self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles, self.items)
         # TODO CHANGE!!!
         self.player.collision_sensor = self.collision_sensor
 
@@ -63,7 +64,6 @@ class Game:
                     self.obstacles.append(curr_obstacle)
                     object_appendable = True
 
-        self.items = [Coin(30, 30, self.next_id())]
 
         self.draw_visitor = DrawVisitor(self.screen)
         self.movement_visitor = MovementVisitor()
@@ -120,6 +120,7 @@ class Game:
             # Slice assignment so that the external references to the lists remain valid
             self.npcs[:] = list(filter(lambda x: x.alive, self.npcs))
             self.bullets[:] = list(filter(lambda x: x.alive, self.bullets))
+            self.items[:] = list(filter(lambda x: x.alive, self.items))
 
             # flip() the display to put your work on screen
             pygame.display.flip()
