@@ -12,3 +12,6 @@ class DrawVisitor:
 
     def visit_bullet(self, bullet):
         pygame.draw.circle(self.screen, "yellow", bullet.pos, bullet.radius)
+
+    def visit_obstacle(self, obstacle):
+        pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)

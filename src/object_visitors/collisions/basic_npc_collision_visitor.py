@@ -15,6 +15,9 @@ class BasicNPCCollisionVisitor:
         # self.basic_npc.take_damage(bullet.damage)
         pass
 
+    def visit_obstacle(self, obstacle):
+        self.execute_visitation(obstacle)
+
     # call this in visit_basic_npc and visit_player
     def execute_visitation(self, object):
         if time.time() - self.basic_npc.prev_collision_time > 0.5:
