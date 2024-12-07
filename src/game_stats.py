@@ -17,5 +17,8 @@ class GameStats:
     
     def player_hit_treshold(self):
         curr_time = time.time()
+        #a list that only keeps hits within the hit treshold time
+        #if treshold time is met, item is discarded
         self.last_hit_time = [t for t in self.last_hit_time if curr_time - t <= self.hit_treshold_time] 
+        #if 2 or more hits are within treshold, return true
         return len(self.last_hit_time) >= 2
