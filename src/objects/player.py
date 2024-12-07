@@ -42,9 +42,6 @@ class Player:
 
         self.pos += dt * speed_vector
 
-    def collide(self, obstacle_pos):
-      pass
-
     def take_damage(self, damage):
         self.hp -= damage
         if self.hp <= 0:
