@@ -103,7 +103,7 @@ class Game:
             if npc_accuracy < 0.2:
                 self.npc_difficulty_level = min(self.difficulty_manager.npc_difficulty_level + 1, self.difficulty_manager.npc_max_difficulty)
                 for npc in self.npcs:
-                    self.difficulty_manager.visit_npc(npc)
+                    self.difficulty_manager.visit_npc(npc, self.player)
             player_hit_treshold = self.game_stats.player_hit_treshold()
             bigger_hit_treshold = self.game_stats.bigger_treshold()
             if player_hit_treshold:
