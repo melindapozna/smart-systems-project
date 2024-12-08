@@ -21,7 +21,7 @@ class DrawVisitor:
         self.medkit_image = pygame.image.load(os.path.join(ASSETS_DIR, 'medkit.png'))
         self.medkit_image = pygame.transform.scale(self.medkit_image, (20, 20))
 
-        self.tree_texture = pygame.image.load(os.path.join(ASSETS_DIR, 'tree.png'))
+        self.tree_texture = pygame.image.load(os.path.join(ASSETS_DIR, 'tree2.png'))
         self.tree_texture = pygame.transform.scale(self.tree_texture, (50, 50))
         
     def visit_player(self, player):
