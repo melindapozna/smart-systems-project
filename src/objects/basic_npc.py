@@ -36,6 +36,24 @@ class BasicNPC:
         self.vision_angle = 40
         self.last_known_location = None
         self.last_check = time.time()
+        
+        # Added communication
+        self.dialogue = [
+            "Hello, player!",
+            "Let's start our fight.",
+            "Good luck!"
+        ]
+        self.is_in_conversation = False
+        self.conversation_index = 0
+        self.last_key_press_time = 0
+        self.key_debounce_delay = 0.2
+        self.text_displayed_at = None
+        self.conversation_duration = 2
+        self.conversation_finished = False
+        self.dialogue_transition_start_time = None 
+        self.dialogue_transition_duration = 0.5  
+        self.transitioning = False
+
 
     def action(self, dt):
         b_Point = self.pos + self.vision_radius * self.dir.rotate(20)
@@ -71,23 +89,6 @@ class BasicNPC:
             if time.time() - self.last_check > 3:
                 self.dir = self.dir.rotate(random.randint(0, 180))
                 self.last_check = time.time()
-
-        # Added communication
-        self.dialogue = [
-            "Hello, player!",
-            "Let's start our fight.",
-            "Good luck!"
-        ]
-        self.is_in_conversation = False
-        self.conversation_index = 0
-        self.last_key_press_time = 0
-        self.key_debounce_delay = 0.2
-        self.text_displayed_at = None
-        self.conversation_duration = 2
-        self.conversation_finished = False
-        self.dialogue_transition_start_time = None 
-        self.dialogue_transition_duration = 0.5  
-        self.transitioning = False
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
