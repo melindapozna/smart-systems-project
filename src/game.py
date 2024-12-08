@@ -97,17 +97,15 @@ class Game:
 
             #handle difficulty changes during the run
             npc_accuracy = self.game_stats.get_basic_npc_accuracy()
-            if npc_accuracy < 0.1:
-                self.basic_npc_difficulty_level = min(self.difficulty_manager.basic_npc_difficulty_level + 1, self.difficulty_manager.basic_npc_max_difficulty)
+            if npc_accuracy < 0.2:
+                self.npc_difficulty_level = min(self.difficulty_manager.npc_difficulty_level + 1, self.difficulty_manager.npc_max_difficulty)
                 for npc in self.npcs:
-                    self.difficulty_manager.visit_basic_npc(npc)
+                    self.difficulty_manager.visit_npc(npc)
             player_hit_treshold = self.game_stats.player_hit_treshold()
             if player_hit_treshold:
-                self.player_difficulty_level = min(self.difficulty_manager.player_difficulty_level + 1, self.difficulty_manager.player_max_difficulty)
-                self.basic_npc_difficulty_level = min(self.difficulty_manager.basic_npc_difficulty_level - 1, 1 )
                 self.difficulty_manager.visit_player(self.player)
                 for npc in self.npcs:
-                    self.difficulty_manager.visit_basic_npc(npc)
+                    self.difficulty_manager.visit_decrease_npc_diff(npc)
 
             new_bullet = self.player.accept(self.shooting_visitor)
             if new_bullet:
