@@ -5,7 +5,6 @@ from math import pi
 
 ASSETS_DIR = os.path.join(os.path.dirname(__file__), '../../assets/images')
 
-
 class DrawVisitor:
     def __init__(self, screen, player_pos):
         self.screen = screen
@@ -13,12 +12,14 @@ class DrawVisitor:
         self.smaller_font = pygame.font.SysFont("Arial", 14)
         self.player_pos = player_pos
         
-        heart_image_path = os.path.join(ASSETS_DIR, 'heart.png')
-        self.heart_image = pygame.image.load(heart_image_path)
+        self.heart_image = pygame.image.load(os.path.join(ASSETS_DIR, 'heart.png'))
         self.heart_image = pygame.transform.scale(self.heart_image, (20, 20))
-        coin_image_path = os.path.join(ASSETS_DIR, 'coin.png')
-        self.coin_image = pygame.image.load(coin_image_path)
-        self.coin_image = pygame.transform.scale(self.coin_image, (20, 20))
+
+        self.coin_image = pygame.image.load(os.path.join(ASSETS_DIR, 'coin.png'))
+        self.coin_image = pygame.transform.scale(self.coin_image, (25, 25))
+        
+        self.medkit_image = pygame.image.load(os.path.join(ASSETS_DIR, 'medkit.png'))
+        self.medkit_image = pygame.transform.scale(self.medkit_image, (30, 30))
         
     def visit_player(self, player):
         pygame.draw.circle(self.screen, "green", player.pos, player.radius)
@@ -57,10 +58,6 @@ class DrawVisitor:
     def render_player_stats(self, player):
         heart_x, heart_y = 20, 20  
         coin_x, coin_y = 20, 60
-    
-        # stats_text = f"Lives: {player.hp}   Items: {len(player.items)}"
-        # lives_text = self.font.render(stats_text, True, "white")
-        # self.screen.blit(lives_text, (20, 20))
         
         self.screen.blit(self.heart_image, (heart_x, heart_y )) 
         lives_text = self.font.render(f"Lives: {player.hp}", True, "white")  
@@ -68,7 +65,7 @@ class DrawVisitor:
 
         self.screen.blit(self.coin_image, (coin_x, coin_y))  
         coins_text = self.font.render(f"Coins:  {len(player.items)}", True, "white")  
-        self.screen.blit(coins_text, (coin_x + 30, coin_y - 5))
+        self.screen.blit(coins_text, (coin_x + 33, coin_y - 5))
     
     # useless, but  wanted to see how it heals
     def render_npc_stats(self, npc):
@@ -120,7 +117,14 @@ class DrawVisitor:
         pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)
 
     def visit_coin(self, coin):
-        pygame.draw.circle(self.screen, "gold", coin.pos, coin.radius)
+        # pygame.draw.circle(self.screen, "gold", coin.pos, coin.radius)
+        coin_image = pygame.image.load(os.path.join(ASSETS_DIR, 'coin.png'))
+        coin_image = pygame.transform.scale(coin_image, (30, 30))
+        
+        coin_pos = (coin.pos.x - 10, coin.pos.y - 10)
+        self.screen.blit(coin_image, coin_pos)
 
     def visit_medkit(self, medkit):
-        pygame.draw.circle(self.screen, "cyan", medkit.pos, medkit.radius)
+        # pygame.draw.circle(self.screen, "cyan", medkit.pos, medkit.radius)
+        medkit_pos = (medkit.pos.x - 10, medkit.pos.y - 10)
+        self.screen.blit(self.medkit_image, medkit_pos)
