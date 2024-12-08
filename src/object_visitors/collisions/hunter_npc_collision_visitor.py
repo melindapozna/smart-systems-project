@@ -12,7 +12,11 @@ class HunterNPCCollisionVisitor:
 
     def visit_hunter(self, hunter):
         self.add_movement_constraints(hunter, 0)
-        # TODO share information here
+        if self.hunter.ready_to_update and hunter.ready_to_update:
+            self.hunter.has_updates = True
+            self.hunter.updates_buffer.append((hunter.hits.copy(), hunter.shots.copy()))
+            self.hunter.look_at(hunter.pos)
+            self.hunter.dir = self.hunter.dir.rotate(180)
 
     def visit_bullet(self, bullet):
         # Note: taking damage can be moved here

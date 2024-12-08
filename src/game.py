@@ -28,9 +28,12 @@ class Game:
         self.player = Player(self.next_id(), self.w / 2, self.h / 2, self.border_sensor, self.game_stats)
         self.npcs = []
         self.bullets = []
+        self.font = pygame.font.SysFont("freesansbold.ttf", 25)
         self.obstacles = []
         self.items = []
-
+        # Designed by 0melapics / Freepik
+        self.background = pygame.image.load('../assets/images/ground.jpg')
+        self.background = pygame.transform.scale(self.background, (self.w, self.h))
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles, self.items)
         # TODO CHANGE!!!
@@ -47,6 +50,16 @@ class Game:
                                   self.collision_sensor,
                                   self.game_stats))
 
+        self.npcs.append(HunterNPC(self.next_id(),
+                                   3 * self.w / 5,
+                                   3 * self.h / 5,
+                                   50,
+                                   self.vision_sensor,
+                                   self.border_sensor,
+                                   self.collision_sensor,
+                                   self.game_stats))
+
+
         # generate 10 objects in random size and position if they don't already collide with something
         for i in range(10):
             radius = random.randint(10, 40)
@@ -62,7 +75,7 @@ class Game:
                     object_appendable = True
 
 
-        self.draw_visitor = DrawVisitor(self.screen)
+        self.draw_visitor = DrawVisitor(self.screen, self.player.pos)
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
         self.difficulty_manager = DifficultyManager()
@@ -81,8 +94,7 @@ class Game:
                     self.running = False
 
             # fill the screen with a color to wipe away anything from last frame
-
-            self.screen.fill("sienna4")
+            self.screen.blit(self.background, (0, 0))
 
             self.movement_visitor.dt = self.dt
 
@@ -125,16 +137,16 @@ class Game:
                 new_bullet = npc.accept(self.shooting_visitor)
                 if new_bullet:
                     self.bullets.append(new_bullet)
+                    
 
-            self.player.accept(self.draw_visitor)
             self.player.accept(self.movement_visitor)
 
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)
                 bullet.accept(self.movement_visitor)
 
-            for obstacle in self.obstacles:
-                obstacle.accept(self.draw_visitor)
+            self.player.accept(self.draw_visitor)
+
 
             new_items = [item for item in self.item_spawner.spawn_item(self.screen.get_width(), self.screen.get_height(), self.next_id())
                          if not len(self.collision_sensor.get_reading(item))]
@@ -145,6 +157,12 @@ class Game:
 
             for item in self.items:
                 item.accept(self.draw_visitor)
+
+            for obstacle in self.obstacles:
+                obstacle.accept(self.draw_visitor)
+
+            self.draw_visitor.render_player_stats(self.player)
+
 
             if not self.player.alive:
                 self.screen.fill("red")

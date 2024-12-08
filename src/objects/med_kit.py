@@ -6,7 +6,7 @@ class MedKit:
         self.value = 5
         self.id = id
         self.alive = True
-        self.radius = 3
+        self.radius = 5
 
     def accept(self, visitor):
         return visitor.visit_medkit(self)

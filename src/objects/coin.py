@@ -6,7 +6,7 @@ class Coin:
         self.value = value
         self.id = id
         self.alive = True
-        self.radius = 3
+        self.radius = 5
 
     def accept(self, visitor):
         return visitor.visit_coin(self)
