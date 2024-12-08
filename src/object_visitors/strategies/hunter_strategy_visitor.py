@@ -1,6 +1,6 @@
-from multiprocessing.spawn import prepare
+import random
 from time import time
-from math import sqrt
+from math import sqrt, exp
 
 # Here a strategy for interacting with each object type can be implemented
 # It will be triggered if it's the highest priority visible object
@@ -10,10 +10,15 @@ class HunterStrategyVisitor:
         self.hunter = hunter
 
     def visit_player(self, player):
-        # TODO choose strategy
         # Shoot a bullet if the previous shot was long enough ago
         if time() - self.hunter.prev_shot_time > self.hunter.fire_rate:
-            self.predict_bullet_direction(player)
+            self.hunter.bullet_strategy = self.choose_strategy()
+            if self.hunter.bullet_strategy == 1:
+                self.predict_bullet_direction(player)
+                self.hunter.shots[1] += 1
+            else:
+                self.hunter.bullet_direction = (player.pos - self.hunter.pos).normalize()
+                self.hunter.shots[0] += 1
             self.hunter.bullet_ready = True
         else:
             self.hunter.look_at(player.pos)
@@ -64,3 +69,12 @@ class HunterStrategyVisitor:
         predicted_direction = 1 / predicted_direction.length() * predicted_direction
         self.hunter.bullet_direction = predicted_direction
 
+    def choose_strategy(self):
+        if self.hunter.shots[0] == 0:
+            return 0
+        if self.hunter.shots[1] == 0:
+            return 1
+        hit_rates = [hits / shots for hits, shots in zip(self.hunter.hits, self.hunter.shots)]
+        if random.random() < exp(hit_rates[0]) / (exp(hit_rates[0]) + exp(hit_rates[1])):
+            return 0
+        return 1

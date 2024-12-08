@@ -40,6 +40,11 @@ class HunterNPC:
         self.fire_rate = 1
         self.game_stats = game_stats
 
+        # for choosing strategy
+        self.hits = [0, 0]
+        self.shots = [0, 0]
+        self.bullet_strategy = 0
+
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
 
@@ -104,7 +109,17 @@ class HunterNPC:
         offset = self.radius + 2 * self.bullet_radius
         bullet_pos = self.pos + offset * self.dir
         self.game_stats.track_bullet_fired()
-        return Bullet(bullet_pos, self.bullet_direction, self.damage, self.bullet_radius, collision_sensor, bullet_id)
+        return Bullet(bullet_pos,
+                      self.bullet_direction,
+                      self.damage,
+                      self.bullet_radius,
+                      collision_sensor,
+                      bullet_id,
+                      self,
+                      self.bullet_strategy)
+
+    def register_hit(self, strategy):
+        self.hits[strategy] += 1
 
     def pick_up(self, item):
         self.items.append(item)
