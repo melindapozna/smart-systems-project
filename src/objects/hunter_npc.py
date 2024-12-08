@@ -54,15 +54,21 @@ class HunterNPC:
             colliding_object.accept(self.collision_visitor)
 
         visible_objects = self.vision_sensor.get_reading(self)
-        priority = 0
-        if visible_objects:
-            target = max(visible_objects, key=lambda x: x.accept(self.prioritization_visitor))
-            target.accept(self.strategy_visitor)
-            priority = target.accept(self.prioritization_visitor)
 
-        if priority == 0:
+        highest_priority = 0
+        target = None
+        if visible_objects:
+            for obj in visible_objects:
+                priority = obj.accept(self.prioritization_visitor)
+                if priority > highest_priority:
+                    target = obj
+                    highest_priority = priority
+
+        if highest_priority == 0:
             self.dir = self.dir.rotate(1)
             return
+        else:
+            target.accept(self.strategy_visitor)
 
         # Add border constraints
         for direction in self.border_sensor.get_reading(self):
