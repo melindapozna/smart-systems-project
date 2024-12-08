@@ -20,6 +20,10 @@ class PlayerCollisionVisitor:
         self.player.pick_up(coin)
         coin.alive = False
 
+    def visit_medkit(self, medkit):
+        self.player.heal(medkit)
+        medkit.alive = False
+
     def add_movement_constraints(self, object):
         vector_to_obstacle = object.pos - self.player.pos
         dist_to_obstacle = vector_to_obstacle.length()

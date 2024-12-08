@@ -22,6 +22,10 @@ class BasicNPCCollisionVisitor:
         self.basic_npc.pick_up(coin)
         coin.alive = False
 
+    def visit_medkit(self, medkit):
+        self.basic_npc.heal(medkit)
+        medkit.alive = False
+
     # call this in visit_basic_npc and visit_player
     def add_movement_constraints(self, object, damage):
         if time.time() - self.basic_npc.prev_collision_time > 0.5:

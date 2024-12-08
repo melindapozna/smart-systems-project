@@ -18,3 +18,6 @@ class BulletCollisionVisitor:
 
     def visit_coin(self, coin):
         pass
+
+    def visit_medkit(self, medkit):
+        pass

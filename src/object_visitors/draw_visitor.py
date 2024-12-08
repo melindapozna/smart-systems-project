@@ -17,4 +17,7 @@ class DrawVisitor:
         pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)
 
     def visit_coin(self, coin):
-        pygame.draw.circle(self.screen, "yellow", coin.pos, coin.radius)
+        pygame.draw.circle(self.screen, "gold", coin.pos, coin.radius)
+
+    def visit_medkit(self, medkit):
+        pygame.draw.circle(self.screen, "cyan", medkit.pos, medkit.radius)
