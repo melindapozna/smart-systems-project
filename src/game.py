@@ -124,7 +124,8 @@ class Game:
                 obstacle.accept(self.draw_visitor)
 
             new_item = self.item_spawner.spawn_coin(self.screen.get_width(), self.screen.get_height(), self.next_id())
-            if new_item:
+            # only append it if it doesn't collide with something
+            if new_item and not len(self.collision_sensor.get_reading(new_item)):
                 self.items.append(new_item)
 
             for item in self.items:
