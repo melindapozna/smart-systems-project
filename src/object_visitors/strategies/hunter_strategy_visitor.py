@@ -55,6 +55,10 @@ class HunterStrategyVisitor:
         a1 = 2 * (pv.x * (P.x - M.x) + pv.y * (P.y - M.y))
         a0 = M.x ** 2 + M.y ** 2 + P.x ** 2 + P.y ** 2 - R ** 2 - 2 * M.x * P.x - 2 * M.y * P.y
         D = a1 ** 2 - 4 * a2 * a0
+
+        # failsafe in case bullet is slower than the player
+        if D < 0:
+            D = 0
         t = (-a1 + sqrt(D)) / (2 * a2)
         predicted_direction = P + t * pv - N
         predicted_direction = 1 / predicted_direction.length() * predicted_direction

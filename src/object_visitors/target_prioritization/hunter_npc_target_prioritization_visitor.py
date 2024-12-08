@@ -1,5 +1,3 @@
-# TODO Actual target prioritization based on the NPC parameters can be done here
-# E.g. if player hp is low, prioritize the player
 class HunterNpcTargetPrioritizationVisitor:
     def __init__(self, hunter_npc):
         self.hunter = hunter_npc
