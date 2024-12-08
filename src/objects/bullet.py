@@ -2,7 +2,7 @@ import time
 from src.object_visitors.collisions.bullet_collision_visitor import BulletCollisionVisitor
 
 class Bullet:
-    def __init__(self, pos, direction, damage, radius, sensor, id):
+    def __init__(self, pos, direction, damage, radius, sensor, id, owner=None, strategy=0):
         self.pos = pos
         self.dir = direction
         self.speed = 400
@@ -13,6 +13,11 @@ class Bullet:
         self.creation_time = time.time()
         self.id = id
         self.collision_visitor = BulletCollisionVisitor(self)
+        self.owner = owner
+
+        # 0: aim at current position
+        # 1: aim at predicted position
+        self.strategy = strategy
 
     def move(self, dt):
         self.pos += self.speed * dt * self.dir

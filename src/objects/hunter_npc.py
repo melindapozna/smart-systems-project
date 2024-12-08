@@ -40,6 +40,16 @@ class HunterNPC:
         self.fire_rate = 1
         self.game_stats = game_stats
 
+        # for choosing strategy
+        self.hits = [0, 0]
+        self.shots = [0, 0]
+        self.bullet_strategy = 0
+
+        self.has_updates = False
+        self.updates_buffer = []
+        self.ready_to_update = False
+        self.last_update_time = time.time()
+
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
 
@@ -52,6 +62,23 @@ class HunterNPC:
         return speed_vector
 
     def move(self, dt):
+        if self.has_updates:
+
+            print("1", self.shots, self.hits)
+            for hits, shots in self.updates_buffer:
+                self.hits[0] = (self.hits[0] + hits[0]) / 2
+                self.hits[1] = (self.hits[1] + hits[1]) / 2
+                self.shots[0] = (self.shots[0] + shots[0]) / 2
+                self.shots[1] = (self.shots[1] + shots[1]) / 2
+            print("2", self.shots, self.hits)
+            self.has_updates = False
+            self.ready_to_update = False
+            self.updates_buffer = []
+            self.last_update_time = time.time()
+        if time.time() - self.last_update_time > 5:
+            self.ready_to_update = True
+
+
         colliding_objects = self.character_collision_sensor.get_reading(self)
         for colliding_object in colliding_objects:
             colliding_object.accept(self.collision_visitor)
@@ -104,7 +131,17 @@ class HunterNPC:
         offset = self.radius + 2 * self.bullet_radius
         bullet_pos = self.pos + offset * self.dir
         self.game_stats.track_bullet_fired()
-        return Bullet(bullet_pos, self.bullet_direction, self.damage, self.bullet_radius, collision_sensor, bullet_id)
+        return Bullet(bullet_pos,
+                      self.bullet_direction,
+                      self.damage,
+                      self.bullet_radius,
+                      collision_sensor,
+                      bullet_id,
+                      self,
+                      self.bullet_strategy)
+
+    def register_hit(self, strategy):
+        self.hits[strategy] += 1
 
     def pick_up(self, item):
         self.items.append(item)

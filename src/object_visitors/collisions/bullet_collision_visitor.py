@@ -4,6 +4,8 @@ class BulletCollisionVisitor:
 
     def visit_player(self, player):
         player.take_damage(self.bullet.damage)
+        if self.bullet.owner:
+            self.bullet.owner.register_hit(self.bullet.strategy)
         self.bullet.alive = False
 
     def visit_basic_npc(self, basic_npc):
