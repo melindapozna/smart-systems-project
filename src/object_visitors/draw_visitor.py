@@ -104,4 +104,3 @@ class DrawVisitor:
 
     def visit_medkit(self, medkit):
         pygame.draw.circle(self.screen, "cyan", medkit.pos, medkit.radius)
-
