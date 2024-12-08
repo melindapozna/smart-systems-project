@@ -20,8 +20,8 @@ class HunterStrategyVisitor:
            self.hunter.bullet_ready = True
 
     def visit_bullet(self, bullet):
-        # TODO: dodge/block
-        pass
+        self.hunter.look_at(bullet.pos)
+        self.hunter.dir = self.hunter.dir.rotate(90)
 
     def visit_obstacle(self, obstacle):
         pass # TODO ? Not sure
