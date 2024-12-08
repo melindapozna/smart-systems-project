@@ -26,7 +26,6 @@ class DrawVisitor:
         
     def visit_player(self, player):
         pygame.draw.circle(self.screen, "green", player.pos, player.radius)
-        self.render_player_stats(player)
 
     def visit_basic_npc(self, basic_npc):
         pygame.draw.line(self.screen, "black", basic_npc.pos,

@@ -128,6 +128,8 @@ class Game:
                 bullet.accept(self.draw_visitor)
                 bullet.accept(self.movement_visitor)
 
+            self.player.accept(self.draw_visitor)
+
             for obstacle in self.obstacles:
                 obstacle.accept(self.draw_visitor)
 
@@ -141,7 +143,8 @@ class Game:
             for item in self.items:
                 item.accept(self.draw_visitor)
 
-            self.player.accept(self.draw_visitor)
+            self.draw_visitor.render_player_stats(self.player)
+
 
             if not self.player.alive:
                 self.screen.fill("red")
