@@ -15,3 +15,6 @@ class BulletCollisionVisitor:
 
     def visit_obstacle(self, obstacle):
         self.bullet.alive = False
+
+    def visit_coin(self):
+        pass

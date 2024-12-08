@@ -1,6 +1,9 @@
 import pygame
+import time
 from src.object_visitors.collisions.player_collision_visitor import PlayerCollisionVisitor
+from src.objects.bullet import Bullet
 from src.game_stats import GameStats
+
 
 
 class Player:
@@ -18,6 +21,11 @@ class Player:
         self.constraints = []
         self.items = []
         self.collision_visitor = PlayerCollisionVisitor(self)
+
+        self.bullet_radius = 2
+        self.damage = 10
+        self.bullet_ready = True
+        self.prev_shot_time = time.time()
         self.game_stats = game_stats
 
     def add_constraint(self, constraint):
@@ -35,6 +43,9 @@ class Player:
         if self.border_sensor.get_reading(self.pos):
             self.alive = False
 
+        if time.time() - self.prev_shot_time > 1:
+            self.bullet_ready = True
+
         colliding_objects = self.collision_sensor.get_reading(self)
         if colliding_objects:
             for colliding_object in colliding_objects:
@@ -50,6 +61,15 @@ class Player:
         if self.hp <= 0:
             self.alive = False
         self.game_stats.register_player_hit()
+
+    def shoot_bullet(self, collision_sensor, bullet_id, dir):
+        self.bullet_ready = False
+        self.prev_shot_time = time.time()
+        # offset: radius of the shooter to avoid bullet collision with the shooter itself
+        offset = self.radius + self.bullet_radius
+        bullet_pos = self.pos + offset * dir
+        return Bullet(bullet_pos, dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
+
 
     def pick_up(self, item):
         self.items.append(item)
