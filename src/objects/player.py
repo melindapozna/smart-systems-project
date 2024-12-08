@@ -1,5 +1,8 @@
 import pygame
 import time
+
+from pygame import Vector2
+
 from src.object_visitors.collisions.player_collision_visitor import PlayerCollisionVisitor
 from src.objects.bullet import Bullet
 from src.game_stats import GameStats
@@ -21,7 +24,7 @@ class Player:
         self.constraints = []
         self.items = []
         self.collision_visitor = PlayerCollisionVisitor(self)
-
+        self.speed_vector = Vector2(0, 0)
         self.bullet_radius = 2
         self.damage = 10
         self.bullet_ready = True
@@ -52,6 +55,7 @@ class Player:
                 colliding_object.accept(self.collision_visitor)
 
         speed_vector = self.speed * direction
+        self.speed_vector = speed_vector
         speed_vector = self.process_constraints(speed_vector)
 
         self.pos += dt * speed_vector

@@ -48,6 +48,16 @@ class Game:
                                   self.collision_sensor,
                                   self.game_stats))
 
+        self.npcs.append(HunterNPC(self.next_id(),
+                                   3 * self.w / 5,
+                                   3 * self.h / 5,
+                                   50,
+                                   self.vision_sensor,
+                                   self.border_sensor,
+                                   self.collision_sensor,
+                                   self.game_stats))
+
+
         # generate 10 objects in random size and position if they don't already collide with something
         for i in range(10):
             radius = random.randint(10, 40)
