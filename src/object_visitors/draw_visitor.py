@@ -121,7 +121,7 @@ class DrawVisitor:
 
     def visit_obstacle(self, obstacle):
         # pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)
-        scaled_texture = pygame.transform.scale(self.tree_texture, (obstacle.radius * 2.5, obstacle.radius * 2.5))
+        scaled_texture = pygame.transform.scale(self.tree_texture, (obstacle.radius * 3, obstacle.radius * 3))
         rect = scaled_texture.get_rect(center=obstacle.pos)
         self.screen.blit(scaled_texture, rect)
 
