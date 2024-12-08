@@ -14,6 +14,14 @@ class ShootingVisitor:
             )
         return None
 
+    def visit_hunter(self, hunter):
+        if hunter.bullet_ready:
+            return hunter.shoot_bullet(
+                collision_sensor=self.collision_sensor,
+                bullet_id=self.id_provider.provide_id()
+            )
+        return None
+
     def visit_bullet(self, bullet):
         return None # TODO maybe the bullets split or something idk
 

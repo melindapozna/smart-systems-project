@@ -11,27 +11,27 @@ class VisionSensor:
     def get_all_objects(self):
         return [self.player] + self.npcs + self.bullets + self.obstacles + self.items
 
-    def get_reading(self, character):
-        # The vector limiting field of view from the right
-        right = character.dir.rotate(-character.vision_angle / 2)
 
+    def get_reading(self, character):
         # Potentially visible objects
+        # TODO currently not processing very large objects in front of the sensor
         objects_in_fov = [x for x in self.get_all_objects()
-                          if character.pos.distance_to(x.pos) <= x.radius + character.radius
-                          and right.angle_to(x.pos - character.pos) < character.vision_angle
+                          if character.pos.distance_to(x.pos) <= x.radius + character.vision_radius
+                          and -character.vision_angle / 2 < character.dir.angle_to(x.pos - character.pos) < character.vision_angle / 2
                           and x.id != character.id]
 
         objects_in_fov.sort(key=lambda x: character.pos.distance_to(x.pos))
         # Sorted list of objects blocking the view, each is an arc segment (r, l)
+        # r < l since we rotate counterclockwise
+        # Sorry for counterintuitive naming
         obstructions = []
         visible_objects = []
         for obj in objects_in_fov:
-            obj_m = right.angle_to(obj.pos - character.pos)
+            obj_m = character.dir.angle_to(obj.pos - character.pos)
             alpha = atan2(obj.radius, character.pos.distance_to(obj.pos)) / pi * 180
             obj_l, obj_r = obj_m + alpha, obj_m - alpha
             is_obstructed = False
-            # r < l since we rotate counterclockwise
-            # Sorry for counterintuitive naming
+
             for i, segment in enumerate(obstructions):
                 r, l = segment
                 # Obstruction is before the object
