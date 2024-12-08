@@ -92,7 +92,7 @@ class DrawVisitor:
                 box_width = 200  
                 box_height = 50 
                 box_x = npc.pos.x - box_width / 2 
-                box_y = npc.pos.y - npc.radius - box_height - 10  
+                box_y = npc.pos.y - npc.radius - box_height - 20
             
                 pygame.draw.rect(self.screen, (0, 0, 0), (box_x, box_y, box_width, box_height))
                 pygame.draw.rect(self.screen, (255, 255, 255), (box_x, box_y, box_width, box_height), 2)
