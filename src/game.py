@@ -75,11 +75,9 @@ class Game:
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
         self.difficulty_manager = DifficultyManager()
-        
 
     def next_id(self):
         return self.id_provider.provide_id()
-
 
     def run(self):
         while self.running:
@@ -94,7 +92,6 @@ class Game:
             self.screen.fill("sienna4")
 
             self.movement_visitor.dt = self.dt
-            
 
             #handle difficulty changes during the run
             npc_accuracy = self.game_stats.get_basic_npc_accuracy()
