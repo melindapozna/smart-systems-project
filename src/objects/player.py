@@ -32,7 +32,6 @@ class Player:
         return speed_vector
 
     def move(self, direction, dt):
-        self.pos += self.speed * dt * direction
         if self.border_sensor.get_reading(self.pos):
             self.alive = False
 
