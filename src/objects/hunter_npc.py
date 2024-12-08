@@ -23,6 +23,7 @@ class HunterNPC:
         self.alive = True
         self.damage = 10
         self.bullet_radius = 2
+        self.bullet_direction = Vector2(0, 1)
         # TODO change
         self.bullet_speed = 400
         self.bullet_ready = False
@@ -103,7 +104,7 @@ class HunterNPC:
         offset = self.radius + 2 * self.bullet_radius
         bullet_pos = self.pos + offset * self.dir
         self.game_stats.track_bullet_fired()
-        return Bullet(bullet_pos, self.dir, self.damage, self.bullet_radius, collision_sensor, bullet_id)
+        return Bullet(bullet_pos, self.bullet_direction, self.damage, self.bullet_radius, collision_sensor, bullet_id)
 
     def pick_up(self, item):
         self.items.append(item)

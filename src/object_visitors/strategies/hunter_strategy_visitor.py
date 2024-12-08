@@ -1,3 +1,4 @@
+from multiprocessing.spawn import prepare
 from time import time
 from math import sqrt
 
@@ -10,14 +11,12 @@ class HunterStrategyVisitor:
 
     def visit_player(self, player):
         # TODO choose strategy
+        # Shoot a bullet if the previous shot was long enough ago
         if time() - self.hunter.prev_shot_time > self.hunter.fire_rate:
             self.predict_bullet_direction(player)
             self.hunter.bullet_ready = True
         else:
             self.hunter.look_at(player.pos)
-        # Shoot a bullet if the previous shot was long enough ago
-        if time() - self.hunter.prev_shot_time > self.hunter.fire_rate:
-            self.hunter.bullet_ready = True
 
     def visit_basic_npc(self, basic_npc):
        self.hunter.look_at(basic_npc.pos)
@@ -57,6 +56,7 @@ class HunterStrategyVisitor:
         a0 = M.x ** 2 + M.y ** 2 + P.x ** 2 + P.y ** 2 - R ** 2 - 2 * M.x * P.x - 2 * M.y * P.y
         D = a1 ** 2 - 4 * a2 * a0
         t = (-a1 + sqrt(D)) / (2 * a2)
-        predicted_point = P + t * pv
-        self.hunter.look_at(predicted_point)
+        predicted_direction = P + t * pv - N
+        predicted_direction = 1 / predicted_direction.length() * predicted_direction
+        self.hunter.bullet_direction = predicted_direction
 
