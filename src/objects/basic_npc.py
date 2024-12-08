@@ -97,7 +97,7 @@ class BasicNPC:
             self.bullet_ready = True
 
         # Kill the NPC if it reaches the border
-        if self.border_sensor.get_reading(self.pos):
+        if self.border_sensor.get_reading(self):
             self.alive = False
 
     def look_at(self, position):
