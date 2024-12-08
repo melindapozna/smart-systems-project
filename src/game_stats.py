@@ -6,6 +6,7 @@ class GameStats:
         self.basic_npc_shots_hit = 0
         self.last_hit_time = []
         self.hit_treshold_time = 10
+        self.smaller_hit_treshold_time = 4
 
     def track_bullet_fired(self):
         self.basic_npc_shots_fired += 1
@@ -14,7 +15,7 @@ class GameStats:
         curr_time = time.time()
         self.last_hit_time.append(curr_time)
     
-    def get_basic_npc_accuracy(self):
+    def get_npc_accuracy(self):
         if self.basic_npc_shots_fired == 0:
             return 0
         return self.basic_npc_shots_hit / self.basic_npc_shots_fired
@@ -26,3 +27,9 @@ class GameStats:
         self.last_hit_time = [t for t in self.last_hit_time if curr_time - t <= self.hit_treshold_time] 
         #if 2 or more hits are within treshold, return true
         return len(self.last_hit_time) >= 2
+    
+    def bigger_treshold(self):
+        curr_time = time.time()
+        self.last_hit_time = [t for t in self.last_hit_time if curr_time - t <= self.smaller_hit_treshold_time]
+        return len(self.last_hit_time) >= 4
+    

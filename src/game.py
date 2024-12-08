@@ -99,18 +99,33 @@ class Game:
             self.movement_visitor.dt = self.dt
 
             #handle difficulty changes during the run
-            npc_accuracy = self.game_stats.get_basic_npc_accuracy()
-            if npc_accuracy < 0.1:
-                self.basic_npc_difficulty_level = min(self.difficulty_manager.basic_npc_difficulty_level + 1, self.difficulty_manager.basic_npc_max_difficulty)
+            npc_accuracy = self.game_stats.get_npc_accuracy()
+            if npc_accuracy < 0.2:
+                self.npc_difficulty_level = min(self.difficulty_manager.npc_difficulty_level + 1, self.difficulty_manager.npc_max_difficulty)
                 for npc in self.npcs:
-                    self.difficulty_manager.visit_basic_npc(npc)
+                    self.difficulty_manager.visit_npc(npc, self.player)
             player_hit_treshold = self.game_stats.player_hit_treshold()
+            bigger_hit_treshold = self.game_stats.bigger_treshold()
             if player_hit_treshold:
-                self.player_difficulty_level = min(self.difficulty_manager.player_difficulty_level + 1, self.difficulty_manager.player_max_difficulty)
-                self.basic_npc_difficulty_level = min(self.difficulty_manager.basic_npc_difficulty_level - 1, 1 )
                 self.difficulty_manager.visit_player(self.player)
                 for npc in self.npcs:
-                    self.difficulty_manager.visit_basic_npc(npc)
+                    self.difficulty_manager.visit_decrease_npc_diff(npc)
+            if bigger_hit_treshold:
+                for npc in self.npcs:
+                    self.difficulty_manager.visit_bigger_decrease_npc_diff(npc)
+            #incase npcs are destroyed, add some more
+            if not self.npcs:
+                new_npcs = self.item_spawner.spawn_npc(
+                                                        self.next_id(),
+                                                        self.screen.get_width(),
+                                                        self.screen.get_height(),
+                                                        self.vision_sensor,
+                                                        self.border_sensor,
+                                                        self.collision_sensor,
+                                                        self.game_stats
+                                                    )
+                self.npcs.extend(new_npcs)
+            
 
             new_bullet = self.player.accept(self.shooting_visitor)
             if new_bullet:
