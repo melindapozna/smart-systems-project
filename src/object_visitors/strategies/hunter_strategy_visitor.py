@@ -28,3 +28,6 @@ class HunterStrategyVisitor:
 
     def visit_coin(self, coin):
         self.hunter.look_at(coin.pos)
+
+    def visit_medkit(self, medkit):
+        self.hunter.look_at(medkit.pos)

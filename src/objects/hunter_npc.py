@@ -85,6 +85,9 @@ class HunterNPC:
         if self.hp <= 0:
             self.alive = False
 
+    def heal(self, medkit):
+        self.hp += medkit.value
+
     def shoot_bullet(self, collision_sensor, bullet_id):
         self.bullet_ready = False
         self.prev_shot_time = time.time()

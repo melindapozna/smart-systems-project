@@ -19,5 +19,8 @@ class HunterNpcTargetPrioritizationVisitor:
     def visit_coin(self, coin):
         return 5
 
+    def visit_medkit(self, medkit):
+        return 3
+
     def visit_hunter(self, hunter):
         return 2
