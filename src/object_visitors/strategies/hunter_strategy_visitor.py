@@ -42,6 +42,9 @@ class HunterStrategyVisitor:
     def visit_medkit(self, medkit):
         self.hunter.look_at(medkit.pos)
 
+    def visit_hunter(self, hunter):
+        self.hunter.look_at(hunter.pos)
+
     def predict_bullet_direction(self, player):
         if player.speed_vector.length() == 0:
             self.hunter.look_at(player.pos)

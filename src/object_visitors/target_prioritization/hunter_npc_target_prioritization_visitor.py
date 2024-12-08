@@ -27,4 +27,6 @@ class HunterNpcTargetPrioritizationVisitor:
         return 3
 
     def visit_hunter(self, hunter):
-        return 2
+        if self.hunter.ready_to_update and hunter.ready_to_update:
+            return 8
+        return 0
