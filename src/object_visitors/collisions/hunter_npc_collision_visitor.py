@@ -26,6 +26,10 @@ class HunterNPCCollisionVisitor:
         self.hunter.pick_up(coin)
         coin.alive = False
 
+    def visit_medkit(self, medkit):
+        self.hunter.heal(medkit)
+        medkit.alive = False
+
     # call this in visit_basic_npc and visit_player
     def add_movement_constraints(self, object, damage):
         if time() - self.hunter.prev_collision_time > 0.5:
