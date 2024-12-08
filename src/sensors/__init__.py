@@ -1,3 +1,4 @@
 from .border_collision_sensor import BorderCollisionSensor
 from .character_collision_sensor import CharacterCollisionSensor
 from .player_position_sensor import PlayerPositionSensor
+from .vision_sensor import VisionSensor

@@ -31,6 +31,7 @@ class BasicNPC:
         self.fire_rate = 1
         self.game_stats = game_stats
         self.vision_radius = 400
+        self.vision_angle = 40
         self.last_known_location = None
         self.last_check = time.time()
 
