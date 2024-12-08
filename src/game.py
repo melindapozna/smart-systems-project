@@ -9,6 +9,8 @@ from sensors import *
 from src.id_provider import IdProvider
 from src.object_visitors.difficulty.difficulty_manager import DifficultyManager
 from src.game_stats import GameStats
+from src.objects.hunter_npc import HunterNPC
+
 
 class Game:
     def __init__(self):
@@ -33,28 +35,30 @@ class Game:
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles, self.items)
         # TODO CHANGE!!!
         self.player.collision_sensor = self.collision_sensor
+        self.vision_sensor = VisionSensor(self.player, self.npcs, self.bullets, self.obstacles, self.items)
 
         # initialize an NPC
-        self.npcs.append(BasicNPC(self.next_id(),
-                                  self.w / 2,
-                                  self.h / 4,
-                                  90,
-                                  self.player_position_sensor,
+        self.npcs.append(HunterNPC(self.next_id(),
+                                  3 * self.w / 4,
+                                  3 * self.h / 4,
+                                  50,
+                                  self.vision_sensor,
                                   self.border_sensor,
                                   self.collision_sensor,
                                   self.game_stats))
+
         self.npcs.append(BasicNPC(self.next_id(),
                                   self.w / 3,
                                   self.h / 3,
-                                  90,
+                                  50,
                                   self.player_position_sensor,
                                   self.border_sensor,
                                   self.collision_sensor,
                                   self.game_stats))
 
-        # generate 30 objects in random size and position if they don't already collide with something
-        for i in range(2):
-            radius = random.randint(5, 20)
+        # generate 10 objects in random size and position if they don't already collide with something
+        for i in range(10):
+            radius = random.randint(10, 40)
             object_appendable = False
             while not object_appendable:
                 position = pygame.Vector2(random.randrange(self.w),
@@ -71,7 +75,6 @@ class Game:
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
         self.difficulty_manager = DifficultyManager()
-        
 
     def next_id(self):
         return self.id_provider.provide_id()
@@ -85,11 +88,10 @@ class Game:
                     self.running = False
 
             # fill the screen with a color to wipe away anything from last frame
+
             self.screen.fill("sienna4")
-            
+
             self.movement_visitor.dt = self.dt
-            self.player.accept(self.draw_visitor)
-            self.player.accept(self.movement_visitor)
 
             #handle difficulty changes during the run
             npc_accuracy = self.game_stats.get_basic_npc_accuracy()
@@ -115,6 +117,9 @@ class Game:
                 new_bullet = npc.accept(self.shooting_visitor)
                 if new_bullet:
                     self.bullets.append(new_bullet)
+
+            self.player.accept(self.draw_visitor)
+            self.player.accept(self.movement_visitor)
 
             for bullet in self.bullets:
                 bullet.accept(self.draw_visitor)

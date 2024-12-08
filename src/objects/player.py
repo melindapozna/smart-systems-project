@@ -40,8 +40,8 @@ class Player:
         return speed_vector
 
     def move(self, direction, dt):
-        if self.border_sensor.get_reading(self.pos):
-            self.alive = False
+        for dir in self.border_sensor.get_reading(self):
+            self.add_constraint(dir)
 
         if time.time() - self.prev_shot_time > 1:
             self.bullet_ready = True

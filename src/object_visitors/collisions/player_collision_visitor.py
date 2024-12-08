@@ -8,6 +8,9 @@ class PlayerCollisionVisitor:
     def visit_basic_npc(self, basic_npc):
         self.add_movement_constraints(basic_npc)
 
+    def visit_hunter(self, hunter):
+        self.add_movement_constraints(hunter)
+
     def visit_bullet(self, bullet):
         # Note: taking damage can be moved here
         # self.player.take_damage(bullet.damage)
