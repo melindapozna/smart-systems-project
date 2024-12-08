@@ -87,7 +87,7 @@ class Game:
             self.movement_visitor.dt = self.dt
 
             #handle difficulty changes during the run
-            npc_accuracy = self.game_stats.get_basic_npc_accuracy()
+            npc_accuracy = self.game_stats.get_npc_accuracy()
             if npc_accuracy < 0.2:
                 self.npc_difficulty_level = min(self.difficulty_manager.npc_difficulty_level + 1, self.difficulty_manager.npc_max_difficulty)
                 for npc in self.npcs:
@@ -103,32 +103,16 @@ class Game:
                     self.difficulty_manager.visit_bigger_decrease_npc_diff(npc)
             #incase npcs are destroyed, add some more
             if not self.npcs:
-                self.npcs.append(HunterNPC(self.next_id(),
-                                  3 * self.w / 4,
-                                  3 * self.h / 4,
-                                  50,
-                                  self.vision_sensor,
-                                  self.border_sensor,
-                                  self.collision_sensor,
-                                  self.game_stats))
-
-                self.npcs.append(BasicNPC(self.next_id(),
-                                  self.w / 3,
-                                  self.h / 3,
-                                  50,
-                                  self.player_position_sensor,
-                                  self.border_sensor,
-                                  self.collision_sensor,
-                                  self.game_stats))
-                
-                self.npcs.append(BasicNPC(self.next_id(),
-                                  self.w / 5,
-                                  self.h / 5,
-                                  50,
-                                  self.player_position_sensor,
-                                  self.border_sensor,
-                                  self.collision_sensor,
-                                  self.game_stats))
+                new_npcs = self.item_spawner.spawn_npc(
+                                                        self.next_id(),
+                                                        self.screen.get_width(),
+                                                        self.screen.get_height(),
+                                                        self.vision_sensor,
+                                                        self.border_sensor,
+                                                        self.collision_sensor,
+                                                        self.game_stats
+                                                    )
+                self.npcs.extend(new_npcs)
             
 
             new_bullet = self.player.accept(self.shooting_visitor)

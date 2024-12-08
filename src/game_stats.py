@@ -15,7 +15,7 @@ class GameStats:
         curr_time = time.time()
         self.last_hit_time.append(curr_time)
     
-    def get_basic_npc_accuracy(self):
+    def get_npc_accuracy(self):
         if self.basic_npc_shots_fired == 0:
             return 0
         return self.basic_npc_shots_hit / self.basic_npc_shots_fired
