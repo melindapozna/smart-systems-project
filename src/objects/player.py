@@ -2,10 +2,12 @@ import pygame
 import time
 from src.object_visitors.collisions.player_collision_visitor import PlayerCollisionVisitor
 from src.objects.bullet import Bullet
+from src.game_stats import GameStats
+
 
 
 class Player:
-    def __init__(self, id,  x, y, border_sensor):
+    def __init__(self, id,  x, y, border_sensor, game_stats):
         self.id = id
         self.x = x
         self.radius = 10
@@ -19,11 +21,12 @@ class Player:
         self.constraints = []
         self.items = []
         self.collision_visitor = PlayerCollisionVisitor(self)
+
         self.bullet_radius = 2
         self.damage = 10
         self.bullet_ready = True
         self.prev_shot_time = time.time()
-
+        self.game_stats = game_stats
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -57,6 +60,7 @@ class Player:
         self.hp -= damage
         if self.hp <= 0:
             self.alive = False
+        self.game_stats.register_player_hit()
 
     def shoot_bullet(self, collision_sensor, bullet_id, dir):
         self.bullet_ready = False
