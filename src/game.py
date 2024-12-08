@@ -55,7 +55,8 @@ class Game:
                                   self.border_sensor,
                                   self.collision_sensor,
                                   self.game_stats))
-
+        
+        
         # generate 10 objects in random size and position if they don't already collide with something
         for i in range(10):
             radius = random.randint(10, 40)
@@ -102,10 +103,43 @@ class Game:
                 for npc in self.npcs:
                     self.difficulty_manager.visit_npc(npc)
             player_hit_treshold = self.game_stats.player_hit_treshold()
+            bigger_hit_treshold = self.game_stats.bigger_treshold()
             if player_hit_treshold:
                 self.difficulty_manager.visit_player(self.player)
                 for npc in self.npcs:
                     self.difficulty_manager.visit_decrease_npc_diff(npc)
+            if bigger_hit_treshold:
+                for npc in self.npcs:
+                    self.difficulty_manager.visit_bigger_decrease_npc_diff(npc)
+            #incase npcs are destroyed, add some more
+            if not self.npcs:
+                self.npcs.append(HunterNPC(self.next_id(),
+                                  3 * self.w / 4,
+                                  3 * self.h / 4,
+                                  50,
+                                  self.vision_sensor,
+                                  self.border_sensor,
+                                  self.collision_sensor,
+                                  self.game_stats))
+
+                self.npcs.append(BasicNPC(self.next_id(),
+                                  self.w / 3,
+                                  self.h / 3,
+                                  50,
+                                  self.player_position_sensor,
+                                  self.border_sensor,
+                                  self.collision_sensor,
+                                  self.game_stats))
+                
+                self.npcs.append(BasicNPC(self.next_id(),
+                                  self.w / 5,
+                                  self.h / 5,
+                                  50,
+                                  self.player_position_sensor,
+                                  self.border_sensor,
+                                  self.collision_sensor,
+                                  self.game_stats))
+            
 
             new_bullet = self.player.accept(self.shooting_visitor)
             if new_bullet:

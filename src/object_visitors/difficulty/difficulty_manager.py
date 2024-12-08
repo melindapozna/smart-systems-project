@@ -9,13 +9,16 @@ class DifficultyManager:
         self.player_max_difficulty = player_max_difficulty
     
     def visit_npc(self, npc):
-        npc.speed += self.npc_difficulty_level * 0.15
-    
-    def visit_decrease_npc_diff(self,npc):
-        npc.speed -= self.npc_difficulty_level * 0.15
+        npc.speed += self.npc_difficulty_level * 0.12
+
+    def visit_decrease_npc_diff(self, npc):
+        npc.speed -= self.npc_difficulty_level * 0.18
+
+    def visit_bigger_decrease_npc_diff(self, npc):
+        npc.speed -= self.npc_difficulty_level * 0.25
 
     def visit_player(self, player):
-        player.speed += self.player_difficulty_level * 0.2
+        player.speed += self.player_difficulty_level * 0.05
 
 
         
