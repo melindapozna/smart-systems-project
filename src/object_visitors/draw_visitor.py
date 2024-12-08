@@ -1,6 +1,9 @@
 import pygame
+import os
 import time
 from math import pi
+
+ASSETS_DIR = os.path.join(os.path.dirname(__file__), '../../assets/images')
 
 
 class DrawVisitor:
@@ -9,6 +12,13 @@ class DrawVisitor:
         self.font = pygame.font.SysFont("Arial", 24) 
         self.smaller_font = pygame.font.SysFont("Arial", 14)
         self.player_pos = player_pos
+        
+        heart_image_path = os.path.join(ASSETS_DIR, 'heart.png')
+        self.heart_image = pygame.image.load(heart_image_path)
+        self.heart_image = pygame.transform.scale(self.heart_image, (20, 20))
+        coin_image_path = os.path.join(ASSETS_DIR, 'coin.png')
+        self.coin_image = pygame.image.load(coin_image_path)
+        self.coin_image = pygame.transform.scale(self.coin_image, (20, 20))
         
     def visit_player(self, player):
         pygame.draw.circle(self.screen, "green", player.pos, player.radius)
@@ -45,10 +55,20 @@ class DrawVisitor:
     
     # Render the player's remaining lives and items in the corner.
     def render_player_stats(self, player):
-        stats_text = f"Lives: {player.hp}"
-        # stats_text = f"Lives: {player.hp} Items: {len(player.items)}"
-        lives_text = self.font.render(stats_text, True, "white")
-        self.screen.blit(lives_text, (20, 20))
+        heart_x, heart_y = 20, 20  
+        coin_x, coin_y = 20, 60
+    
+        # stats_text = f"Lives: {player.hp}   Items: {len(player.items)}"
+        # lives_text = self.font.render(stats_text, True, "white")
+        # self.screen.blit(lives_text, (20, 20))
+        
+        self.screen.blit(self.heart_image, (heart_x, heart_y )) 
+        lives_text = self.font.render(f"Lives: {player.hp}", True, "white")  
+        self.screen.blit(lives_text, (heart_x + 30, heart_y - 2))
+
+        self.screen.blit(self.coin_image, (coin_x, coin_y))  
+        coins_text = self.font.render(f"Coins:  {len(player.items)}", True, "white")  
+        self.screen.blit(coins_text, (coin_x + 30, coin_y - 5))
     
     # useless, but  wanted to see how it heals
     def render_npc_stats(self, npc):
