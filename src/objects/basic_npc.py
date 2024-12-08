@@ -1,3 +1,4 @@
+import pygame
 from pygame import Vector2
 from src.objects.bullet import Bullet
 from src.object_visitors.collisions.basic_npc_collision_visitor import BasicNPCCollisionVisitor
@@ -24,6 +25,7 @@ class BasicNPC:
         self.prev_shot_time = time.time()
         self.collided = False
         self.prev_collision_time = time.time()
+        self.prev_communication_time = time.time()
         # Directions in which the NPC can't move
         self.constraints = []
         self.items = []
@@ -34,6 +36,24 @@ class BasicNPC:
         self.vision_angle = 40
         self.last_known_location = None
         self.last_check = time.time()
+        
+        # Added communication
+        self.dialogue = [
+            "Hello, player!",
+            "Let's start our fight.",
+            "Good luck!"
+        ]
+        self.is_in_conversation = False
+        self.conversation_index = 0
+        self.last_key_press_time = 0
+        self.key_debounce_delay = 0.2
+        self.text_displayed_at = None
+        self.conversation_duration = 2
+        self.conversation_finished = False
+        self.dialogue_transition_start_time = None 
+        self.dialogue_transition_duration = 0.5  
+        self.transitioning = False
+
 
     def action(self, dt):
         b_Point = self.pos + self.vision_radius * self.dir.rotate(20)
@@ -128,3 +148,37 @@ class BasicNPC:
 
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
+
+    def start_conversation(self):
+        self.is_in_conversation = True
+        self.conversation_index = 0
+        self.text_displayed_at = time.time() 
+
+    def advance_dialogue(self):
+        self.conversation_index += 1
+        if self.conversation_index >= len(self.dialogue):
+            self.start_dialogue_transition()
+            self.end_conversation()
+        else:
+            self.text_displayed_at = time.time() 
+
+    def end_conversation(self):
+        # Reset NPC behavior after conversation ends
+        self.is_in_conversation = False
+        self.conversation_finished = True
+        self.text_displayed_at = None
+        
+    
+    # dialogue transition
+    def start_dialogue_transition(self):
+        self.transitioning = True
+        self.dialogue_transition_start_time = time.time()
+
+    def is_in_transition(self):
+        if not self.transitioning:
+            return False
+        elapsed_time = time.time() - self.dialogue_transition_start_time
+        if elapsed_time > self.dialogue_transition_duration:
+            self.transitioning = False
+            return False
+        return True

@@ -39,6 +39,20 @@ class HunterNPC:
         self.strategy_visitor = HunterStrategyVisitor(self)
         self.fire_rate = 1
         self.game_stats = game_stats
+        
+        # Added communication
+        self.dialogue = [
+            "Hello, player!",
+            "Let's start our fight.",
+            "Good luck!"
+        ]
+        self.is_in_conversation = False
+        self.conversation_index = 0
+        self.last_key_press_time = 0
+        self.key_debounce_delay = 0.2
+        self.text_displayed_at = None
+        self.conversation_duration = 2
+        self.conversation_finished = False
 
         # for choosing strategy
         self.hits = [0, 0]
@@ -148,3 +162,22 @@ class HunterNPC:
 
     def accept(self, visitor):
         return visitor.visit_hunter(self)
+    
+    def start_conversation(self):
+        self.is_in_conversation = True
+        self.conversation_index = 0
+        self.text_displayed_at = time.time() 
+
+    def advance_dialogue(self):
+        self.conversation_index += 1
+        if self.conversation_index >= len(self.dialogue):
+            # self.start_dialogue_transition()
+            self.end_conversation()
+        else:
+            self.text_displayed_at = time.time() 
+
+    def end_conversation(self):
+        # Reset NPC behavior after conversation ends
+        self.is_in_conversation = False
+        self.conversation_finished = True
+        self.text_displayed_at = None
