@@ -48,15 +48,6 @@ class Game:
                                   self.collision_sensor,
                                   self.game_stats))
 
-        self.npcs.append(BasicNPC(self.next_id(),
-                                  self.w / 3,
-                                  self.h / 3,
-                                  50,
-                                  self.player_position_sensor,
-                                  self.border_sensor,
-                                  self.collision_sensor,
-                                  self.game_stats))
-
         # generate 10 objects in random size and position if they don't already collide with something
         for i in range(10):
             radius = random.randint(10, 40)
@@ -121,7 +112,6 @@ class Game:
                     self.bullets.append(new_bullet)
                     
 
-            self.player.accept(self.draw_visitor)
             self.player.accept(self.movement_visitor)
 
             for bullet in self.bullets:
@@ -140,6 +130,8 @@ class Game:
 
             for item in self.items:
                 item.accept(self.draw_visitor)
+
+            self.player.accept(self.draw_visitor)
 
             if not self.player.alive:
                 self.screen.fill("red")
