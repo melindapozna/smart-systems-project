@@ -31,7 +31,9 @@ class Game:
         self.font = pygame.font.SysFont("freesansbold.ttf", 25)
         self.obstacles = []
         self.items = []
-
+        # Designed by 0melapics / Freepik
+        self.background = pygame.image.load('../assets/images/ground.jpg')
+        self.background = pygame.transform.scale(self.background, (self.w, self.h))
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles, self.items)
         # TODO CHANGE!!!
@@ -92,7 +94,7 @@ class Game:
                     self.running = False
 
             # fill the screen with a color to wipe away anything from last frame
-            self.screen.fill("sienna4")
+            self.screen.blit(self.background, (0, 0))
 
             self.movement_visitor.dt = self.dt
 
