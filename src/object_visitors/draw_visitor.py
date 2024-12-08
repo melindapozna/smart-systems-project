@@ -50,6 +50,9 @@ class DrawVisitor:
                         dir_left.angle_to(pygame.Vector2(1, 0)) / 180 * pi,
                         dir_right.angle_to(pygame.Vector2(1, 0)) / 180 * pi)
         pygame.draw.circle(self.screen, "purple", hunter.pos, hunter.radius)
+        self.update_conversation(hunter)
+        self.render_conversation(hunter)
+        self.render_npc_stats(hunter)
 
     def visit_bullet(self, bullet):
         pygame.draw.circle(self.screen, "yellow", bullet.pos, bullet.radius)

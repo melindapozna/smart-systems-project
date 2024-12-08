@@ -91,8 +91,6 @@ class Game:
                     self.running = False
 
             # fill the screen with a color to wipe away anything from last frame
-            # self.screen.fill("purple")
-
             self.screen.fill("sienna4")
 
             self.movement_visitor.dt = self.dt
