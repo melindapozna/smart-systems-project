@@ -77,14 +77,11 @@ class HunterNPC:
 
     def move(self, dt):
         if self.has_updates:
-
-            print("1", self.shots, self.hits)
             for hits, shots in self.updates_buffer:
                 self.hits[0] = (self.hits[0] + hits[0]) / 2
                 self.hits[1] = (self.hits[1] + hits[1]) / 2
                 self.shots[0] = (self.shots[0] + shots[0]) / 2
                 self.shots[1] = (self.shots[1] + shots[1]) / 2
-            print("2", self.shots, self.hits)
             self.has_updates = False
             self.ready_to_update = False
             self.updates_buffer = []
