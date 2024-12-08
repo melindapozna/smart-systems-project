@@ -23,6 +23,8 @@ class HunterNPC:
         self.alive = True
         self.damage = 10
         self.bullet_radius = 2
+        # TODO change
+        self.bullet_speed = 400
         self.bullet_ready = False
         self.prev_shot_time = time.time()
         self.vision_angle = 30

@@ -5,7 +5,7 @@ class HunterNpcTargetPrioritizationVisitor:
         self.hunter = hunter_npc
 
     def visit_player(self, player):
-        if self.hunter.hp <= 25 and player.hp < 50:
+        if self.hunter.hp <= 25 and player.hp > 50:
             return 2
         return 10
 
