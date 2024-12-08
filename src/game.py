@@ -1,5 +1,4 @@
 import random
-
 import pygame
 from time import sleep
 
@@ -7,8 +6,8 @@ from objects import *
 from object_visitors import *
 from sensors import *
 from src.id_provider import IdProvider
-from src.object_visitors.difficulty.difficulty_manager import DifficultyManager
 from src.game_stats import GameStats
+from src.item_spawner import ItemSpawner
 
 class Game:
     def __init__(self):
@@ -27,7 +26,7 @@ class Game:
         self.npcs = []
         self.bullets = []
         self.obstacles = []
-        self.items = [Coin(30, 30, self.next_id())]
+        self.items = []
 
         self.player_position_sensor = PlayerPositionSensor(self.player)
         self.collision_sensor = CharacterCollisionSensor(self.player, self.npcs, self.bullets, self.obstacles, self.items)
@@ -71,6 +70,7 @@ class Game:
         self.movement_visitor = MovementVisitor()
         self.shooting_visitor = ShootingVisitor(self.collision_sensor, self.id_provider)
         self.difficulty_manager = DifficultyManager()
+        self.item_spawner = ItemSpawner()
         
 
     def next_id(self):
@@ -122,6 +122,10 @@ class Game:
 
             for obstacle in self.obstacles:
                 obstacle.accept(self.draw_visitor)
+
+            new_item = self.item_spawner.spawn_coin(self.screen.get_width(), self.screen.get_height(), self.next_id())
+            if new_item:
+                self.items.append(new_item)
 
             for item in self.items:
                 item.accept(self.draw_visitor)
