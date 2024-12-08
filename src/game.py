@@ -132,8 +132,6 @@ class Game:
 
             self.player.accept(self.draw_visitor)
 
-            for obstacle in self.obstacles:
-                obstacle.accept(self.draw_visitor)
 
             new_items = [item for item in self.item_spawner.spawn_item(self.screen.get_width(), self.screen.get_height(), self.next_id())
                          if not len(self.collision_sensor.get_reading(item))]
@@ -144,6 +142,9 @@ class Game:
 
             for item in self.items:
                 item.accept(self.draw_visitor)
+
+            for obstacle in self.obstacles:
+                obstacle.accept(self.draw_visitor)
 
             self.draw_visitor.render_player_stats(self.player)
 
