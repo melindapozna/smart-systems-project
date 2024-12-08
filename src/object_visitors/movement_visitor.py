@@ -32,3 +32,7 @@ class MovementVisitor:
 
     def visit_bullet(self, bullet):
         bullet.move(self.dt)
+
+    def visit_obstacle(self, obstacle):
+        # obstacles don't move
+        pass
