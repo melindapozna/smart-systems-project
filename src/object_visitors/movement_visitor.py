@@ -20,7 +20,11 @@ class MovementVisitor:
         player.move(player_direction, self.dt)
 
     def visit_basic_npc(self, basic_npc):
-        basic_npc.move(self.dt)
+        basic_npc.action(self.dt)
+        #basic_npc.move(self.dt)
+
+    def visit_hunter(self, hunter):
+        hunter.move(self.dt)
 
     def visit_bullet(self, bullet):
         bullet.move(self.dt)

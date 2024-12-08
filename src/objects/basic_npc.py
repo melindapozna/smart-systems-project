@@ -1,8 +1,9 @@
 from pygame import Vector2
 from src.objects.bullet import Bullet
 from src.object_visitors.collisions.basic_npc_collision_visitor import BasicNPCCollisionVisitor
-from src.game_stats import GameStats
 import time
+import math
+import random
 
 
 class BasicNPC:
@@ -29,6 +30,45 @@ class BasicNPC:
         self.collision_visitor = BasicNPCCollisionVisitor(self)
         self.fire_rate = 1
         self.game_stats = game_stats
+        self.vision_radius = 400
+        self.vision_angle = 40
+        self.last_known_location = None
+        self.last_check = time.time()
+
+    def action(self, dt):
+        b_Point = self.pos + self.vision_radius * self.dir.rotate(20)
+        c_Point = self.pos + self.vision_radius * self.dir.rotate(-20)
+        character_position = self.player_sensor.get_reading()
+        side_1 = self.pos.distance_to(b_Point)
+        side_2 = self.pos.distance_to(c_Point)
+        side_3 = c_Point.distance_to(b_Point)
+        side_4 = self.pos.distance_to(character_position)
+        side_5 = b_Point.distance_to(character_position)
+        side_6 = c_Point.distance_to(character_position)
+        p1 = (side_1 + side_2 + side_3) / 2
+        p2 = (side_1 + side_4 + side_5) / 2
+        p3 = (side_3 + side_5 + side_6) / 2
+        p4 = (side_2 + side_4 + side_6) / 2
+        area1 = math.sqrt(p1 * (p1 - side_1) * (p1 - side_2) * (p1 - side_3))
+        area2 = math.sqrt(p2 * (p2 - side_1) * (p2 - side_4) * (p2 - side_5))
+        area3 = math.sqrt(p3 * (p3 - side_3) * (p3 - side_5) * (p3 - side_6))
+        area4 = math.sqrt(p4 * (p4 - side_2) * (p4 - side_4) * (p4 - side_6))
+        if area2 + area3 + area4 + 1 >= area1 >= area2 + area3 + area4 - 1:
+            self.move(dt)
+            self.last_known_location = character_position.copy()
+        else:
+            self.searching(dt)
+
+    def searching(self, dt):
+        if self.last_known_location is not None:
+            self.look_at(self.last_known_location)
+            self.pos += self.speed * dt * self.dir
+            if self.last_known_location.distance_to(self.pos) < 2:
+                self.last_known_location = None
+        else:
+            if time.time() - self.last_check > 3:
+                self.dir = self.dir.rotate(random.randint(0, 180))
+                self.last_check = time.time()
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -46,10 +86,10 @@ class BasicNPC:
         if colliding_objects:
             for colliding_object in colliding_objects:
                 colliding_object.accept(self.collision_visitor)
+
         self.look_at(self.player_sensor.get_reading())
         speed_vector = self.speed * self.dir
         speed_vector = self.process_constraints(speed_vector)
-
         self.pos += dt * speed_vector
 
         # Shoot a bullet if the previous shot was at least 1 second ago
@@ -57,10 +97,9 @@ class BasicNPC:
             self.bullet_ready = True
 
         # Kill the NPC if it reaches the border
-        if self.border_sensor.get_reading(self.pos):
+        if self.border_sensor.get_reading(self):
             self.alive = False
 
-    # make the npc face a target position
     def look_at(self, position):
         dist = self.pos.distance_to(position)
         if dist == 0:
