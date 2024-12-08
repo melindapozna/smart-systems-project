@@ -20,6 +20,9 @@ class DrawVisitor:
         
         self.medkit_image = pygame.image.load(os.path.join(ASSETS_DIR, 'medkit.png'))
         self.medkit_image = pygame.transform.scale(self.medkit_image, (30, 30))
+
+        self.tree_texture = pygame.image.load(os.path.join(ASSETS_DIR, 'tree.png'))
+        self.tree_texture = pygame.transform.scale(self.tree_texture, (50, 50))
         
     def visit_player(self, player):
         pygame.draw.circle(self.screen, "green", player.pos, player.radius)
@@ -117,7 +120,10 @@ class DrawVisitor:
         screen.blit(text_surface, (x, y))
 
     def visit_obstacle(self, obstacle):
-        pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)
+        # pygame.draw.circle(self.screen, "darkgreen", obstacle.pos, obstacle.radius)
+        scaled_texture = pygame.transform.scale(self.tree_texture, (obstacle.radius * 2.5, obstacle.radius * 2.5))
+        rect = scaled_texture.get_rect(center=obstacle.pos)
+        self.screen.blit(scaled_texture, rect)
 
     def visit_coin(self, coin):
         # pygame.draw.circle(self.screen, "gold", coin.pos, coin.radius)
