@@ -74,5 +74,8 @@ class Player:
     def pick_up(self, item):
         self.items.append(item)
 
+    def heal(self, item):
+        self.hp += item.value
+
     def accept(self, visitor):
         return visitor.visit_player(self)

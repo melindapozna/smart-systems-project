@@ -123,5 +123,8 @@ class BasicNPC:
     def pick_up(self, item):
         self.items.append(item)
 
+    def heal(self, medkit):
+        self.hp += medkit.value
+
     def accept(self, visitor):
         return visitor.visit_basic_npc(self)
