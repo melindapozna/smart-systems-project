@@ -5,4 +5,4 @@ You can launch the game by running src/main.py
 
 NPCs follow you and shoot bullets at you periodically.
 
-Trees spawn randomly, you can use them to hind behind. Golden objects are coins, blue objects are potions that heal you.
+Trees spawn randomly, you can use them to hind behind. You can collect healing potions to restore health and coins to increase your score.
